@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "references": [
+    {
+      "path": "../wiki-core"
+    },
+    {
+      "path": "../agent-runtime"
+    },
+    {
+      "path": "../site-compiler"
+    }
+  ],
+  "include": [
+    "src/**/*.ts"
+  ]
+}

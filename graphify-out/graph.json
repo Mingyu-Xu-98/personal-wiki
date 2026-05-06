@@ -1,0 +1,436 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "index.ts",
+      "file_type": "code",
+      "source_file": "packages/site-compiler/src/index.ts",
+      "source_location": "L1",
+      "id": "packages_site_compiler_src_index_ts",
+      "community": 1,
+      "norm_label": "index.ts"
+    },
+    {
+      "label": "createEmptyContentModel()",
+      "file_type": "code",
+      "source_file": "packages/site-compiler/src/index.ts",
+      "source_location": "L52",
+      "id": "index_createemptycontentmodel",
+      "community": 1,
+      "norm_label": "createemptycontentmodel()"
+    },
+    {
+      "label": "index.ts",
+      "file_type": "code",
+      "source_file": "packages/wiki-core/src/index.ts",
+      "source_location": "L1",
+      "id": "packages_wiki_core_src_index_ts",
+      "community": 1,
+      "norm_label": "index.ts"
+    },
+    {
+      "label": "emptyWikiSnapshot()",
+      "file_type": "code",
+      "source_file": "packages/wiki-core/src/index.ts",
+      "source_location": "L98",
+      "id": "index_emptywikisnapshot",
+      "community": 2,
+      "norm_label": "emptywikisnapshot()"
+    },
+    {
+      "label": "demo.ts",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/demo.ts",
+      "source_location": "L1",
+      "id": "packages_harness_core_src_demo_ts",
+      "community": 3,
+      "norm_label": "demo.ts"
+    },
+    {
+      "label": "orchestrator.ts",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L1",
+      "id": "packages_harness_core_src_orchestrator_ts",
+      "community": 1,
+      "norm_label": "orchestrator.ts"
+    },
+    {
+      "label": "HarnessOrchestrator",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L20",
+      "id": "orchestrator_harnessorchestrator",
+      "community": 0,
+      "norm_label": "harnessorchestrator"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L25",
+      "id": "orchestrator_harnessorchestrator_constructor",
+      "community": 2,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".getState()",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L35",
+      "id": "orchestrator_harnessorchestrator_getstate",
+      "community": 0,
+      "norm_label": ".getstate()"
+    },
+    {
+      "label": ".run()",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L39",
+      "id": "orchestrator_harnessorchestrator_run",
+      "community": 0,
+      "norm_label": ".run()"
+    },
+    {
+      "label": ".createContextLedger()",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L108",
+      "id": "orchestrator_harnessorchestrator_createcontextledger",
+      "community": 0,
+      "norm_label": ".createcontextledger()"
+    },
+    {
+      "label": ".createPlan()",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L123",
+      "id": "orchestrator_harnessorchestrator_createplan",
+      "community": 0,
+      "norm_label": ".createplan()"
+    },
+    {
+      "label": "createSequentialIds()",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L162",
+      "id": "orchestrator_createsequentialids",
+      "community": 2,
+      "norm_label": "createsequentialids()"
+    },
+    {
+      "label": "summarizeWiki()",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L173",
+      "id": "orchestrator_summarizewiki",
+      "community": 0,
+      "norm_label": "summarizewiki()"
+    },
+    {
+      "label": "types.ts",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/types.ts",
+      "source_location": "L1",
+      "id": "packages_harness_core_src_types_ts",
+      "community": 1,
+      "norm_label": "types.ts"
+    },
+    {
+      "label": "index.ts",
+      "file_type": "code",
+      "source_file": "packages/harness-core/src/index.ts",
+      "source_location": "L1",
+      "id": "packages_harness_core_src_index_ts",
+      "community": 3,
+      "norm_label": "index.ts"
+    },
+    {
+      "label": "index.ts",
+      "file_type": "code",
+      "source_file": "packages/agent-runtime/src/index.ts",
+      "source_location": "L1",
+      "id": "packages_agent_runtime_src_index_ts",
+      "community": 4,
+      "norm_label": "index.ts"
+    },
+    {
+      "label": "index.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/src/index.ts",
+      "source_location": "L1",
+      "id": "apps_studio_src_index_ts",
+      "community": 5,
+      "norm_label": "index.ts"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/site-compiler/src/index.ts",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_src": "packages_site_compiler_src_index_ts",
+      "_tgt": "index_createemptycontentmodel",
+      "source": "packages_site_compiler_src_index_ts",
+      "target": "index_createemptycontentmodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "packages_harness_core_src_orchestrator_ts",
+      "_tgt": "packages_site_compiler_src_index_ts",
+      "source": "packages_site_compiler_src_index_ts",
+      "target": "packages_harness_core_src_orchestrator_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/types.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_src": "packages_harness_core_src_types_ts",
+      "_tgt": "packages_site_compiler_src_index_ts",
+      "source": "packages_site_compiler_src_index_ts",
+      "target": "packages_harness_core_src_types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L61",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_run",
+      "_tgt": "index_createemptycontentmodel",
+      "source": "index_createemptycontentmodel",
+      "target": "orchestrator_harnessorchestrator_run"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/wiki-core/src/index.ts",
+      "source_location": "L98",
+      "weight": 1.0,
+      "_src": "packages_wiki_core_src_index_ts",
+      "_tgt": "index_emptywikisnapshot",
+      "source": "packages_wiki_core_src_index_ts",
+      "target": "index_emptywikisnapshot",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_src": "packages_harness_core_src_orchestrator_ts",
+      "_tgt": "packages_wiki_core_src_index_ts",
+      "source": "packages_wiki_core_src_index_ts",
+      "target": "packages_harness_core_src_orchestrator_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/types.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "packages_harness_core_src_types_ts",
+      "_tgt": "packages_wiki_core_src_index_ts",
+      "source": "packages_wiki_core_src_index_ts",
+      "target": "packages_harness_core_src_types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_constructor",
+      "_tgt": "index_emptywikisnapshot",
+      "source": "index_emptywikisnapshot",
+      "target": "orchestrator_harnessorchestrator_constructor"
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/demo.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "packages_harness_core_src_demo_ts",
+      "_tgt": "packages_harness_core_src_index_ts",
+      "source": "packages_harness_core_src_demo_ts",
+      "target": "packages_harness_core_src_index_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "packages_harness_core_src_orchestrator_ts",
+      "_tgt": "packages_harness_core_src_types_ts",
+      "source": "packages_harness_core_src_orchestrator_ts",
+      "target": "packages_harness_core_src_types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_src": "packages_harness_core_src_orchestrator_ts",
+      "_tgt": "orchestrator_harnessorchestrator",
+      "source": "packages_harness_core_src_orchestrator_ts",
+      "target": "orchestrator_harnessorchestrator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L162",
+      "weight": 1.0,
+      "_src": "packages_harness_core_src_orchestrator_ts",
+      "_tgt": "orchestrator_createsequentialids",
+      "source": "packages_harness_core_src_orchestrator_ts",
+      "target": "orchestrator_createsequentialids",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L173",
+      "weight": 1.0,
+      "_src": "packages_harness_core_src_orchestrator_ts",
+      "_tgt": "orchestrator_summarizewiki",
+      "source": "packages_harness_core_src_orchestrator_ts",
+      "target": "orchestrator_summarizewiki",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator",
+      "_tgt": "orchestrator_harnessorchestrator_constructor",
+      "source": "orchestrator_harnessorchestrator",
+      "target": "orchestrator_harnessorchestrator_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator",
+      "_tgt": "orchestrator_harnessorchestrator_getstate",
+      "source": "orchestrator_harnessorchestrator",
+      "target": "orchestrator_harnessorchestrator_getstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator",
+      "_tgt": "orchestrator_harnessorchestrator_run",
+      "source": "orchestrator_harnessorchestrator",
+      "target": "orchestrator_harnessorchestrator_run",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L108",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator",
+      "_tgt": "orchestrator_harnessorchestrator_createcontextledger",
+      "source": "orchestrator_harnessorchestrator",
+      "target": "orchestrator_harnessorchestrator_createcontextledger",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L123",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator",
+      "_tgt": "orchestrator_harnessorchestrator_createplan",
+      "source": "orchestrator_harnessorchestrator",
+      "target": "orchestrator_harnessorchestrator_createplan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_constructor",
+      "_tgt": "orchestrator_createsequentialids",
+      "source": "orchestrator_harnessorchestrator_constructor",
+      "target": "orchestrator_createsequentialids",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L57",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_run",
+      "_tgt": "orchestrator_harnessorchestrator_createcontextledger",
+      "source": "orchestrator_harnessorchestrator_run",
+      "target": "orchestrator_harnessorchestrator_createcontextledger",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_run",
+      "_tgt": "orchestrator_harnessorchestrator_createplan",
+      "source": "orchestrator_harnessorchestrator_run",
+      "target": "orchestrator_harnessorchestrator_createplan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L113",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_createcontextledger",
+      "_tgt": "orchestrator_summarizewiki",
+      "source": "orchestrator_harnessorchestrator_createcontextledger",
+      "target": "orchestrator_summarizewiki",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": []
+}
