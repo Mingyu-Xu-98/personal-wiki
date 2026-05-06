@@ -4,5 +4,11 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@personal-wiki-harness/agent-runtime": "workspace:*",
+    "@personal-wiki-harness/meta-skill-core": "workspace:*",
+    "@personal-wiki-harness/site-compiler": "workspace:*",
+    "@personal-wiki-harness/wiki-core": "workspace:*"
   }
 }

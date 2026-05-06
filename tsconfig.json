@@ -1,20 +1,7 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./packages/wiki-core"
-    },
-    {
-      "path": "./packages/harness-core"
-    },
-    {
-      "path": "./packages/agent-runtime"
-    },
-    {
-      "path": "./packages/site-compiler"
-    },
-    {
-      "path": "./apps/studio"
-    }
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "packages/**/*.ts",
+    "apps/**/*.ts"
   ]
 }

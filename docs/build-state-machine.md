@@ -8,10 +8,12 @@ stateDiagram-v2
   created --> planning
   planning --> executing
   executing --> verifying
-  verifying --> versioned
+  verifying --> reflecting
+  reflecting --> versioned
   planning --> failed
   executing --> failed
   verifying --> failed
+  reflecting --> failed
   versioned --> [*]
   failed --> [*]
 ```
@@ -22,6 +24,7 @@ stateDiagram-v2
 - `planning`: context is assembled and a plan is produced.
 - `executing`: plan steps are being applied.
 - `verifying`: outputs are checked.
+- `reflecting`: run quality, model routing, and possible system-skill evidence are recorded.
 - `versioned`: a build version exists.
 - `failed`: the run stopped with a recorded error.
 

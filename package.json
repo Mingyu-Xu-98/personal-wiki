@@ -9,7 +9,7 @@
     "apps/*"
   ],
   "scripts": {
-    "check": "tsc -b",
+    "check": "tsc -p tsconfig.json --pretty false",
     "demo": "node packages/harness-core/src/demo.ts"
   },
   "devDependencies": {

@@ -10,6 +10,7 @@ The harness is the coordinating runtime around the model. It owns intent capture
 - `packages/wiki-core/` defines source, wiki, relation, event, and lint primitives.
 - `packages/harness-core/` defines the orchestration runtime.
 - `packages/agent-runtime/` defines model and tool boundary contracts.
+- `packages/meta-skill-core/` defines system-level reusable procedures and promotion policy.
 - `packages/site-compiler/` defines content and site planning primitives.
 - `apps/studio/` is reserved for the future UI.
 

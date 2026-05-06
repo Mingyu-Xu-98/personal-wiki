@@ -22,13 +22,16 @@ The harness should make long-running site construction inspectable, repeatable, 
 1. Raw sources are immutable evidence. They may be ingested, cited, and linked, but never rewritten by the harness.
 2. The wiki is the persistent semantic layer. It is maintained incrementally through entity pages, topic pages, source summaries, indexes, logs, relations, and lint issues.
 3. The harness runtime is the command layer. It converts a user intent into context, a plan, tool calls, verification, and a build version.
-4. The site compiler converts wiki-backed meaning into a content model and site plan.
-5. Studio will eventually provide a UI over the same primitives, but it is not the first dependency.
+4. The system meta-skill layer stores product-level procedures learned during build testing.
+5. The model routing layer assigns strong, balanced, small, or retrieval tiers to runtime roles.
+6. The site compiler converts wiki-backed meaning into a content model and site plan.
+7. Studio will eventually provide a UI over the same primitives, but it is not the first dependency.
 
 ## Package Boundaries
 
 - `wiki-core` owns wiki data shapes and wiki maintenance records.
 - `agent-runtime` owns model messages, tool definitions, tool calls, and execution boundaries.
+- `meta-skill-core` owns system-level reusable procedures and promotion policy.
 - `site-compiler` owns the intermediate site representation.
 - `harness-core` coordinates the other packages without knowing UI details.
 
