@@ -21,3 +21,15 @@ npm run demo
 ```
 
 The demo runs the minimal harness without calling an external model or adopting any older project framework.
+
+## Studio Preview
+
+```sh
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`. The local seed admin account is:
+
+- email: `admin@personal.wiki`
+- password: `admin123`

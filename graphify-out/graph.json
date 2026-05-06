@@ -18,7 +18,7 @@
       "source_file": "packages/site-compiler/src/index.ts",
       "source_location": "L52",
       "id": "index_createemptycontentmodel",
-      "community": 0,
+      "community": 1,
       "norm_label": "createemptycontentmodel()"
     },
     {
@@ -36,7 +36,7 @@
       "source_file": "packages/wiki-core/src/index.ts",
       "source_location": "L98",
       "id": "index_emptywikisnapshot",
-      "community": 3,
+      "community": 1,
       "norm_label": "emptywikisnapshot()"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "packages/harness-core/src/demo.ts",
       "source_location": "L1",
       "id": "packages_harness_core_src_demo_ts",
-      "community": 4,
+      "community": 6,
       "norm_label": "demo.ts"
     },
     {
@@ -63,7 +63,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L36",
       "id": "orchestrator_harnessorchestrator",
-      "community": 0,
+      "community": 3,
       "norm_label": "harnessorchestrator"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L41",
       "id": "orchestrator_harnessorchestrator_constructor",
-      "community": 3,
+      "community": 1,
       "norm_label": ".constructor()"
     },
     {
@@ -81,7 +81,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L55",
       "id": "orchestrator_harnessorchestrator_getstate",
-      "community": 0,
+      "community": 2,
       "norm_label": ".getstate()"
     },
     {
@@ -90,7 +90,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L59",
       "id": "orchestrator_harnessorchestrator_run",
-      "community": 0,
+      "community": 3,
       "norm_label": ".run()"
     },
     {
@@ -99,7 +99,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L135",
       "id": "orchestrator_harnessorchestrator_createcontextledger",
-      "community": 0,
+      "community": 3,
       "norm_label": ".createcontextledger()"
     },
     {
@@ -108,7 +108,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L159",
       "id": "orchestrator_harnessorchestrator_createplan",
-      "community": 0,
+      "community": 3,
       "norm_label": ".createplan()"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L215",
       "id": "orchestrator_harnessorchestrator_selectsystemskills",
-      "community": 0,
+      "community": 3,
       "norm_label": ".selectsystemskills()"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L223",
       "id": "orchestrator_harnessorchestrator_createmodelroutingledger",
-      "community": 0,
+      "community": 3,
       "norm_label": ".createmodelroutingledger()"
     },
     {
@@ -135,7 +135,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L236",
       "id": "orchestrator_harnessorchestrator_createreflection",
-      "community": 0,
+      "community": 3,
       "norm_label": ".createreflection()"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L262",
       "id": "orchestrator_harnessorchestrator_recordsystemskillevidence",
-      "community": 2,
+      "community": 3,
       "norm_label": ".recordsystemskillevidence()"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L283",
       "id": "orchestrator_createsequentialids",
-      "community": 3,
+      "community": 1,
       "norm_label": "createsequentialids()"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L294",
       "id": "orchestrator_summarizewiki",
-      "community": 1,
+      "community": 3,
       "norm_label": "summarizewiki()"
     },
     {
@@ -180,7 +180,7 @@
       "source_file": "packages/harness-core/src/index.ts",
       "source_location": "L1",
       "id": "packages_harness_core_src_index_ts",
-      "community": 4,
+      "community": 6,
       "norm_label": "index.ts"
     },
     {
@@ -198,7 +198,7 @@
       "source_file": "packages/agent-runtime/src/index.ts",
       "source_location": "L113",
       "id": "index_selectmodeltier",
-      "community": 0,
+      "community": 3,
       "norm_label": "selectmodeltier()"
     },
     {
@@ -207,7 +207,7 @@
       "source_file": "packages/meta-skill-core/src/index.ts",
       "source_location": "L1",
       "id": "packages_meta_skill_core_src_index_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "index.ts"
     },
     {
@@ -216,7 +216,7 @@
       "source_file": "packages/meta-skill-core/src/index.ts",
       "source_location": "L73",
       "id": "index_createinitialsystemskilllibrary",
-      "community": 2,
+      "community": 1,
       "norm_label": "createinitialsystemskilllibrary()"
     },
     {
@@ -225,7 +225,7 @@
       "source_file": "packages/meta-skill-core/src/index.ts",
       "source_location": "L151",
       "id": "index_selectactivesystemskills",
-      "community": 2,
+      "community": 3,
       "norm_label": "selectactivesystemskills()"
     },
     {
@@ -234,17 +234,584 @@
       "source_file": "packages/meta-skill-core/src/index.ts",
       "source_location": "L170",
       "id": "index_appendsystemskillevidence",
-      "community": 2,
+      "community": 1,
       "norm_label": "appendsystemskillevidence()"
     },
     {
-      "label": "index.ts",
+      "label": "next-env.d.ts",
       "file_type": "code",
-      "source_file": "apps/studio/src/index.ts",
+      "source_file": "apps/studio/next-env.d.ts",
       "source_location": "L1",
-      "id": "apps_studio_src_index_ts",
+      "id": "apps_studio_next_env_d_ts",
+      "community": 14,
+      "norm_label": "next-env.d.ts"
+    },
+    {
+      "label": "next.config.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/next.config.ts",
+      "source_location": "L1",
+      "id": "apps_studio_next_config_ts",
+      "community": 15,
+      "norm_label": "next.config.ts"
+    },
+    {
+      "label": "layout.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/app/layout.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_app_layout_tsx",
+      "community": 7,
+      "norm_label": "layout.tsx"
+    },
+    {
+      "label": "RootLayout()",
+      "file_type": "code",
+      "source_file": "apps/studio/app/layout.tsx",
+      "source_location": "L9",
+      "id": "layout_rootlayout",
+      "community": 7,
+      "norm_label": "rootlayout()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/app/page.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_app_page_tsx",
+      "community": 8,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "HomePage()",
+      "file_type": "code",
+      "source_file": "apps/studio/app/page.tsx",
+      "source_location": "L3",
+      "id": "page_homepage",
+      "community": 8,
+      "norm_label": "homepage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/app/admin/page.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_app_admin_page_tsx",
+      "community": 0,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "AdminPage()",
+      "file_type": "code",
+      "source_file": "apps/studio/app/admin/page.tsx",
+      "source_location": "L6",
+      "id": "page_adminpage",
+      "community": 0,
+      "norm_label": "adminpage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/app/register/page.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_app_register_page_tsx",
+      "community": 9,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "RegisterPage()",
+      "file_type": "code",
+      "source_file": "apps/studio/app/register/page.tsx",
+      "source_location": "L3",
+      "id": "page_registerpage",
+      "community": 9,
+      "norm_label": "registerpage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/app/knowledge/page.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_app_knowledge_page_tsx",
+      "community": 0,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "KnowledgePage()",
+      "file_type": "code",
+      "source_file": "apps/studio/app/knowledge/page.tsx",
+      "source_location": "L6",
+      "id": "page_knowledgepage",
+      "community": 0,
+      "norm_label": "knowledgepage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/app/site/page.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_app_site_page_tsx",
+      "community": 0,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "SitePage()",
+      "file_type": "code",
+      "source_file": "apps/studio/app/site/page.tsx",
+      "source_location": "L6",
+      "id": "page_sitepage",
+      "community": 0,
+      "norm_label": "sitepage()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/app/api/auth/logout/route.ts",
+      "source_location": "L1",
+      "id": "apps_studio_app_api_auth_logout_route_ts",
+      "community": 4,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "apps/studio/app/api/runs/route.ts",
+      "source_location": "L11",
+      "id": "route_post",
+      "community": 4,
+      "norm_label": "post()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/app/api/auth/register/route.ts",
+      "source_location": "L1",
+      "id": "apps_studio_app_api_auth_register_route_ts",
+      "community": 4,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/app/api/auth/login/route.ts",
+      "source_location": "L1",
+      "id": "apps_studio_app_api_auth_login_route_ts",
+      "community": 4,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/app/api/admin/overview/route.ts",
+      "source_location": "L1",
+      "id": "apps_studio_app_api_admin_overview_route_ts",
+      "community": 2,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "apps/studio/app/api/session/route.ts",
+      "source_location": "L4",
+      "id": "route_get",
+      "community": 2,
+      "norm_label": "get()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/app/api/knowledge/route.ts",
+      "source_location": "L1",
+      "id": "apps_studio_app_api_knowledge_route_ts",
+      "community": 4,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/app/api/site/route.ts",
+      "source_location": "L1",
+      "id": "apps_studio_app_api_site_route_ts",
+      "community": 2,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/app/api/runs/route.ts",
+      "source_location": "L1",
+      "id": "apps_studio_app_api_runs_route_ts",
+      "community": 4,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "isDesiredArtifact()",
+      "file_type": "code",
+      "source_file": "apps/studio/app/api/runs/route.ts",
+      "source_location": "L25",
+      "id": "route_isdesiredartifact",
+      "community": 4,
+      "norm_label": "isdesiredartifact()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/app/api/session/route.ts",
+      "source_location": "L1",
+      "id": "apps_studio_app_api_session_route_ts",
+      "community": 2,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/app/create/page.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_app_create_page_tsx",
+      "community": 0,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "CreatePage()",
+      "file_type": "code",
+      "source_file": "apps/studio/app/create/page.tsx",
+      "source_location": "L6",
+      "id": "page_createpage",
+      "community": 0,
+      "norm_label": "createpage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/app/login/page.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_app_login_page_tsx",
+      "community": 10,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "LoginPage()",
+      "file_type": "code",
+      "source_file": "apps/studio/app/login/page.tsx",
+      "source_location": "L3",
+      "id": "page_loginpage",
+      "community": 10,
+      "norm_label": "loginpage()"
+    },
+    {
+      "label": "AdminWorkspace.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/components/AdminWorkspace.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_components_adminworkspace_tsx",
+      "community": 16,
+      "norm_label": "adminworkspace.tsx"
+    },
+    {
+      "label": "KnowledgeWorkspace.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/components/KnowledgeWorkspace.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_components_knowledgeworkspace_tsx",
       "community": 5,
-      "norm_label": "index.ts"
+      "norm_label": "knowledgeworkspace.tsx"
+    },
+    {
+      "label": "load()",
+      "file_type": "code",
+      "source_file": "apps/studio/components/KnowledgeWorkspace.tsx",
+      "source_location": "L38",
+      "id": "knowledgeworkspace_load",
+      "community": 5,
+      "norm_label": "load()"
+    },
+    {
+      "label": "addSource()",
+      "file_type": "code",
+      "source_file": "apps/studio/components/KnowledgeWorkspace.tsx",
+      "source_location": "L47",
+      "id": "knowledgeworkspace_addsource",
+      "community": 5,
+      "norm_label": "addsource()"
+    },
+    {
+      "label": "AppShell.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/components/AppShell.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_components_appshell_tsx",
+      "community": 11,
+      "norm_label": "appshell.tsx"
+    },
+    {
+      "label": "logout()",
+      "file_type": "code",
+      "source_file": "apps/studio/components/AppShell.tsx",
+      "source_location": "L38",
+      "id": "appshell_logout",
+      "community": 11,
+      "norm_label": "logout()"
+    },
+    {
+      "label": "AuthForm.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/components/AuthForm.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_components_authform_tsx",
+      "community": 12,
+      "norm_label": "authform.tsx"
+    },
+    {
+      "label": "submit()",
+      "file_type": "code",
+      "source_file": "apps/studio/components/AuthForm.tsx",
+      "source_location": "L17",
+      "id": "authform_submit",
+      "community": 12,
+      "norm_label": "submit()"
+    },
+    {
+      "label": "SiteWorkspace.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/components/SiteWorkspace.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_components_siteworkspace_tsx",
+      "community": 17,
+      "norm_label": "siteworkspace.tsx"
+    },
+    {
+      "label": "CreateWorkspace.tsx",
+      "file_type": "code",
+      "source_file": "apps/studio/components/CreateWorkspace.tsx",
+      "source_location": "L1",
+      "id": "apps_studio_components_createworkspace_tsx",
+      "community": 13,
+      "norm_label": "createworkspace.tsx"
+    },
+    {
+      "label": "submit()",
+      "file_type": "code",
+      "source_file": "apps/studio/components/CreateWorkspace.tsx",
+      "source_location": "L26",
+      "id": "createworkspace_submit",
+      "community": 13,
+      "norm_label": "submit()"
+    },
+    {
+      "label": "auth.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L1",
+      "id": "apps_studio_lib_server_auth_ts",
+      "community": 0,
+      "norm_label": "auth.ts"
+    },
+    {
+      "label": "hashPassword()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L26",
+      "id": "auth_hashpassword",
+      "community": 0,
+      "norm_label": "hashpassword()"
+    },
+    {
+      "label": "verifyPassword()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L31",
+      "id": "auth_verifypassword",
+      "community": 0,
+      "norm_label": "verifypassword()"
+    },
+    {
+      "label": "signSession()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L43",
+      "id": "auth_signsession",
+      "community": 0,
+      "norm_label": "signsession()"
+    },
+    {
+      "label": "createSessionToken()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L46",
+      "id": "auth_createsessiontoken",
+      "community": 0,
+      "norm_label": "createsessiontoken()"
+    },
+    {
+      "label": "readSessionToken()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L48",
+      "id": "auth_readsessiontoken",
+      "community": 0,
+      "norm_label": "readsessiontoken()"
+    },
+    {
+      "label": "seedUser()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L60",
+      "id": "auth_seeduser",
+      "community": 0,
+      "norm_label": "seeduser()"
+    },
+    {
+      "label": "getPublicUser()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L88",
+      "id": "auth_getpublicuser",
+      "community": 0,
+      "norm_label": "getpublicuser()"
+    },
+    {
+      "label": "getAllUsers()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L96",
+      "id": "auth_getallusers",
+      "community": 2,
+      "norm_label": "getallusers()"
+    },
+    {
+      "label": "registerUser()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L98",
+      "id": "auth_registeruser",
+      "community": 0,
+      "norm_label": "registeruser()"
+    },
+    {
+      "label": "loginUser()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L122",
+      "id": "auth_loginuser",
+      "community": 0,
+      "norm_label": "loginuser()"
+    },
+    {
+      "label": "logoutUser()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L139",
+      "id": "auth_logoutuser",
+      "community": 4,
+      "norm_label": "logoutuser()"
+    },
+    {
+      "label": "getCurrentUser()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L144",
+      "id": "auth_getcurrentuser",
+      "community": 0,
+      "norm_label": "getcurrentuser()"
+    },
+    {
+      "label": "requireUser()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L151",
+      "id": "auth_requireuser",
+      "community": 0,
+      "norm_label": "requireuser()"
+    },
+    {
+      "label": "requireAdmin()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L159",
+      "id": "auth_requireadmin",
+      "community": 0,
+      "norm_label": "requireadmin()"
+    },
+    {
+      "label": "store.ts",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L1",
+      "id": "apps_studio_lib_server_store_ts",
+      "community": 2,
+      "norm_label": "store.ts"
+    },
+    {
+      "label": "now()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L7",
+      "id": "store_now",
+      "community": 3,
+      "norm_label": "now()"
+    },
+    {
+      "label": "getKnowledge()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L118",
+      "id": "store_getknowledge",
+      "community": 2,
+      "norm_label": "getknowledge()"
+    },
+    {
+      "label": "addSource()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L126",
+      "id": "store_addsource",
+      "community": 4,
+      "norm_label": "addsource()"
+    },
+    {
+      "label": "createRun()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L140",
+      "id": "store_createrun",
+      "community": 4,
+      "norm_label": "createrun()"
+    },
+    {
+      "label": "getRuns()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L146",
+      "id": "store_getruns",
+      "community": 2,
+      "norm_label": "getruns()"
+    },
+    {
+      "label": "getSiteState()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L148",
+      "id": "store_getsitestate",
+      "community": 2,
+      "norm_label": "getsitestate()"
+    },
+    {
+      "label": "getSystemState()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L157",
+      "id": "store_getsystemstate",
+      "community": 2,
+      "norm_label": "getsystemstate()"
+    },
+    {
+      "label": "getStats()",
+      "file_type": "code",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L166",
+      "id": "store_getstats",
+      "community": 2,
+      "norm_label": "getstats()"
     }
   ],
   "links": [
@@ -553,12 +1120,72 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_constructor",
+      "_tgt": "store_now",
+      "source": "orchestrator_harnessorchestrator_constructor",
+      "target": "store_now"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L46",
       "weight": 1.0,
       "_src": "orchestrator_harnessorchestrator_constructor",
       "_tgt": "index_createinitialsystemskilllibrary",
       "source": "orchestrator_harnessorchestrator_constructor",
       "target": "index_createinitialsystemskilllibrary"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L123",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_getstate",
+      "_tgt": "store_getknowledge",
+      "source": "orchestrator_harnessorchestrator_getstate",
+      "target": "store_getknowledge"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L149",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_getstate",
+      "_tgt": "store_getsitestate",
+      "source": "orchestrator_harnessorchestrator_getstate",
+      "target": "store_getsitestate"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L158",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_getstate",
+      "_tgt": "store_getsystemstate",
+      "source": "orchestrator_harnessorchestrator_getstate",
+      "target": "store_getsystemstate"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L167",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_getstate",
+      "_tgt": "store_getstats",
+      "source": "orchestrator_harnessorchestrator_getstate",
+      "target": "store_getstats"
     },
     {
       "relation": "calls",
@@ -622,6 +1249,30 @@
     },
     {
       "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_run",
+      "_tgt": "store_now",
+      "source": "orchestrator_harnessorchestrator_run",
+      "target": "store_now"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L141",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_run",
+      "_tgt": "store_createrun",
+      "source": "orchestrator_harnessorchestrator_run",
+      "target": "store_createrun"
+    },
+    {
+      "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L137",
@@ -655,6 +1306,30 @@
       "source": "orchestrator_harnessorchestrator_createcontextledger",
       "target": "orchestrator_summarizewiki",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L143",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_createcontextledger",
+      "_tgt": "store_now",
+      "source": "orchestrator_harnessorchestrator_createcontextledger",
+      "target": "store_now"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L163",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_createplan",
+      "_tgt": "store_now",
+      "source": "orchestrator_harnessorchestrator_createplan",
+      "target": "store_now"
     },
     {
       "relation": "calls",
@@ -697,12 +1372,36 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L240",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_createreflection",
+      "_tgt": "store_now",
+      "source": "orchestrator_harnessorchestrator_createreflection",
+      "target": "store_now"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "packages/harness-core/src/orchestrator.ts",
       "source_location": "L267",
       "weight": 1.0,
       "_src": "orchestrator_harnessorchestrator_recordsystemskillevidence",
       "_tgt": "index_appendsystemskillevidence",
       "source": "orchestrator_harnessorchestrator_recordsystemskillevidence",
       "target": "index_appendsystemskillevidence"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "packages/harness-core/src/orchestrator.ts",
+      "source_location": "L270",
+      "weight": 1.0,
+      "_src": "orchestrator_harnessorchestrator_recordsystemskillevidence",
+      "_tgt": "store_now",
+      "source": "orchestrator_harnessorchestrator_recordsystemskillevidence",
+      "target": "store_now"
     },
     {
       "relation": "imports_from",
@@ -774,6 +1473,966 @@
       "_tgt": "index_appendsystemskillevidence",
       "source": "packages_meta_skill_core_src_index_ts",
       "target": "index_appendsystemskillevidence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/layout.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "apps_studio_app_layout_tsx",
+      "_tgt": "layout_rootlayout",
+      "source": "apps_studio_app_layout_tsx",
+      "target": "layout_rootlayout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "apps_studio_app_page_tsx",
+      "_tgt": "page_homepage",
+      "source": "apps_studio_app_page_tsx",
+      "target": "page_homepage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/admin/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "apps_studio_app_admin_page_tsx",
+      "_tgt": "page_adminpage",
+      "source": "apps_studio_app_admin_page_tsx",
+      "target": "page_adminpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/admin/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "page_adminpage",
+      "_tgt": "auth_getcurrentuser",
+      "source": "page_adminpage",
+      "target": "auth_getcurrentuser"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/register/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "apps_studio_app_register_page_tsx",
+      "_tgt": "page_registerpage",
+      "source": "apps_studio_app_register_page_tsx",
+      "target": "page_registerpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/knowledge/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "apps_studio_app_knowledge_page_tsx",
+      "_tgt": "page_knowledgepage",
+      "source": "apps_studio_app_knowledge_page_tsx",
+      "target": "page_knowledgepage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/knowledge/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "page_knowledgepage",
+      "_tgt": "auth_getcurrentuser",
+      "source": "page_knowledgepage",
+      "target": "auth_getcurrentuser"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/site/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "apps_studio_app_site_page_tsx",
+      "_tgt": "page_sitepage",
+      "source": "apps_studio_app_site_page_tsx",
+      "target": "page_sitepage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/site/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "page_sitepage",
+      "_tgt": "auth_getcurrentuser",
+      "source": "page_sitepage",
+      "target": "auth_getcurrentuser"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/auth/logout/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "apps_studio_app_api_auth_logout_route_ts",
+      "_tgt": "route_post",
+      "source": "apps_studio_app_api_auth_logout_route_ts",
+      "target": "route_post",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/auth/register/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "apps_studio_app_api_auth_register_route_ts",
+      "_tgt": "route_post",
+      "source": "route_post",
+      "target": "apps_studio_app_api_auth_register_route_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/auth/login/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "apps_studio_app_api_auth_login_route_ts",
+      "_tgt": "route_post",
+      "source": "route_post",
+      "target": "apps_studio_app_api_auth_login_route_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/knowledge/route.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_src": "apps_studio_app_api_knowledge_route_ts",
+      "_tgt": "route_post",
+      "source": "route_post",
+      "target": "apps_studio_app_api_knowledge_route_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/runs/route.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_src": "apps_studio_app_api_runs_route_ts",
+      "_tgt": "route_post",
+      "source": "route_post",
+      "target": "apps_studio_app_api_runs_route_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/runs/route.ts",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "route_post",
+      "_tgt": "route_isdesiredartifact",
+      "source": "route_post",
+      "target": "route_isdesiredartifact",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/auth/logout/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "route_post",
+      "_tgt": "auth_logoutuser",
+      "source": "route_post",
+      "target": "auth_logoutuser"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/auth/register/route.ts",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "route_post",
+      "_tgt": "auth_registeruser",
+      "source": "route_post",
+      "target": "auth_registeruser"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/auth/register/route.ts",
+      "source_location": "L19",
+      "weight": 1.0,
+      "_src": "route_post",
+      "_tgt": "auth_loginuser",
+      "source": "route_post",
+      "target": "auth_loginuser"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/knowledge/route.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_src": "route_post",
+      "_tgt": "auth_requireuser",
+      "source": "route_post",
+      "target": "auth_requireuser"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/knowledge/route.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_src": "route_post",
+      "_tgt": "store_addsource",
+      "source": "route_post",
+      "target": "store_addsource"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/runs/route.ts",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "route_post",
+      "_tgt": "store_createrun",
+      "source": "route_post",
+      "target": "store_createrun"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/admin/overview/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "apps_studio_app_api_admin_overview_route_ts",
+      "_tgt": "route_get",
+      "source": "apps_studio_app_api_admin_overview_route_ts",
+      "target": "route_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/knowledge/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "apps_studio_app_api_knowledge_route_ts",
+      "_tgt": "route_get",
+      "source": "route_get",
+      "target": "apps_studio_app_api_knowledge_route_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/site/route.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "apps_studio_app_api_site_route_ts",
+      "_tgt": "route_get",
+      "source": "route_get",
+      "target": "apps_studio_app_api_site_route_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/runs/route.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "apps_studio_app_api_runs_route_ts",
+      "_tgt": "route_get",
+      "source": "route_get",
+      "target": "apps_studio_app_api_runs_route_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/session/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "apps_studio_app_api_session_route_ts",
+      "_tgt": "route_get",
+      "source": "route_get",
+      "target": "apps_studio_app_api_session_route_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/admin/overview/route.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "route_get",
+      "_tgt": "auth_requireadmin",
+      "source": "route_get",
+      "target": "auth_requireadmin"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/admin/overview/route.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "route_get",
+      "_tgt": "store_getsystemstate",
+      "source": "route_get",
+      "target": "store_getsystemstate"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/admin/overview/route.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_src": "route_get",
+      "_tgt": "auth_getallusers",
+      "source": "route_get",
+      "target": "auth_getallusers"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/admin/overview/route.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_src": "route_get",
+      "_tgt": "store_getstats",
+      "source": "route_get",
+      "target": "store_getstats"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/knowledge/route.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "route_get",
+      "_tgt": "auth_requireuser",
+      "source": "route_get",
+      "target": "auth_requireuser"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/knowledge/route.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "route_get",
+      "_tgt": "store_getknowledge",
+      "source": "route_get",
+      "target": "store_getknowledge"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/site/route.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "route_get",
+      "_tgt": "store_getsitestate",
+      "source": "route_get",
+      "target": "store_getsitestate"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/api/runs/route.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_src": "route_get",
+      "_tgt": "store_getruns",
+      "source": "route_get",
+      "target": "store_getruns"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L146",
+      "weight": 1.0,
+      "_src": "route_get",
+      "_tgt": "auth_getcurrentuser",
+      "source": "route_get",
+      "target": "auth_getcurrentuser"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/api/runs/route.ts",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_src": "apps_studio_app_api_runs_route_ts",
+      "_tgt": "route_isdesiredartifact",
+      "source": "apps_studio_app_api_runs_route_ts",
+      "target": "route_isdesiredartifact",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/create/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "apps_studio_app_create_page_tsx",
+      "_tgt": "page_createpage",
+      "source": "apps_studio_app_create_page_tsx",
+      "target": "page_createpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "apps/studio/app/create/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "page_createpage",
+      "_tgt": "auth_getcurrentuser",
+      "source": "page_createpage",
+      "target": "auth_getcurrentuser"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/app/login/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "apps_studio_app_login_page_tsx",
+      "_tgt": "page_loginpage",
+      "source": "apps_studio_app_login_page_tsx",
+      "target": "page_loginpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/components/KnowledgeWorkspace.tsx",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_src": "apps_studio_components_knowledgeworkspace_tsx",
+      "_tgt": "knowledgeworkspace_load",
+      "source": "apps_studio_components_knowledgeworkspace_tsx",
+      "target": "knowledgeworkspace_load",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/components/KnowledgeWorkspace.tsx",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_src": "apps_studio_components_knowledgeworkspace_tsx",
+      "_tgt": "knowledgeworkspace_addsource",
+      "source": "apps_studio_components_knowledgeworkspace_tsx",
+      "target": "knowledgeworkspace_addsource",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/components/KnowledgeWorkspace.tsx",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_src": "knowledgeworkspace_addsource",
+      "_tgt": "knowledgeworkspace_load",
+      "source": "knowledgeworkspace_load",
+      "target": "knowledgeworkspace_addsource",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/components/AppShell.tsx",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_src": "apps_studio_components_appshell_tsx",
+      "_tgt": "appshell_logout",
+      "source": "apps_studio_components_appshell_tsx",
+      "target": "appshell_logout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/components/AuthForm.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_src": "apps_studio_components_authform_tsx",
+      "_tgt": "authform_submit",
+      "source": "apps_studio_components_authform_tsx",
+      "target": "authform_submit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/components/CreateWorkspace.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "apps_studio_components_createworkspace_tsx",
+      "_tgt": "createworkspace_submit",
+      "source": "apps_studio_components_createworkspace_tsx",
+      "target": "createworkspace_submit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_hashpassword",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_hashpassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_verifypassword",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_verifypassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L43",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_signsession",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_signsession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L46",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_createsessiontoken",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_createsessiontoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L48",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_readsessiontoken",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_readsessiontoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L60",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_seeduser",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_seeduser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_getpublicuser",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_getpublicuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_getallusers",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_getallusers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L98",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_registeruser",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_registeruser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L122",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_loginuser",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_loginuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L139",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_logoutuser",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_logoutuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L144",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_getcurrentuser",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_getcurrentuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L151",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_requireuser",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_requireuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L159",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_auth_ts",
+      "_tgt": "auth_requireadmin",
+      "source": "apps_studio_lib_server_auth_ts",
+      "target": "auth_requireadmin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_src": "auth_seeduser",
+      "_tgt": "auth_hashpassword",
+      "source": "auth_hashpassword",
+      "target": "auth_seeduser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L115",
+      "weight": 1.0,
+      "_src": "auth_registeruser",
+      "_tgt": "auth_hashpassword",
+      "source": "auth_hashpassword",
+      "target": "auth_registeruser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L125",
+      "weight": 1.0,
+      "_src": "auth_loginuser",
+      "_tgt": "auth_verifypassword",
+      "source": "auth_verifypassword",
+      "target": "auth_loginuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L46",
+      "weight": 1.0,
+      "_src": "auth_createsessiontoken",
+      "_tgt": "auth_signsession",
+      "source": "auth_signsession",
+      "target": "auth_createsessiontoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L56",
+      "weight": 1.0,
+      "_src": "auth_readsessiontoken",
+      "_tgt": "auth_signsession",
+      "source": "auth_signsession",
+      "target": "auth_readsessiontoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L129",
+      "weight": 1.0,
+      "_src": "auth_loginuser",
+      "_tgt": "auth_createsessiontoken",
+      "source": "auth_createsessiontoken",
+      "target": "auth_loginuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L146",
+      "weight": 1.0,
+      "_src": "auth_getcurrentuser",
+      "_tgt": "auth_readsessiontoken",
+      "source": "auth_readsessiontoken",
+      "target": "auth_getcurrentuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L119",
+      "weight": 1.0,
+      "_src": "auth_registeruser",
+      "_tgt": "auth_getpublicuser",
+      "source": "auth_getpublicuser",
+      "target": "auth_registeruser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L136",
+      "weight": 1.0,
+      "_src": "auth_loginuser",
+      "_tgt": "auth_getpublicuser",
+      "source": "auth_getpublicuser",
+      "target": "auth_loginuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L148",
+      "weight": 1.0,
+      "_src": "auth_getcurrentuser",
+      "_tgt": "auth_getpublicuser",
+      "source": "auth_getpublicuser",
+      "target": "auth_getcurrentuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L152",
+      "weight": 1.0,
+      "_src": "auth_requireuser",
+      "_tgt": "auth_getcurrentuser",
+      "source": "auth_getcurrentuser",
+      "target": "auth_requireuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/auth.ts",
+      "source_location": "L160",
+      "weight": 1.0,
+      "_src": "auth_requireadmin",
+      "_tgt": "auth_requireuser",
+      "source": "auth_requireuser",
+      "target": "auth_requireadmin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_store_ts",
+      "_tgt": "store_now",
+      "source": "apps_studio_lib_server_store_ts",
+      "target": "store_now",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L118",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_store_ts",
+      "_tgt": "store_getknowledge",
+      "source": "apps_studio_lib_server_store_ts",
+      "target": "store_getknowledge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L126",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_store_ts",
+      "_tgt": "store_addsource",
+      "source": "apps_studio_lib_server_store_ts",
+      "target": "store_addsource",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L140",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_store_ts",
+      "_tgt": "store_createrun",
+      "source": "apps_studio_lib_server_store_ts",
+      "target": "store_createrun",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L146",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_store_ts",
+      "_tgt": "store_getruns",
+      "source": "apps_studio_lib_server_store_ts",
+      "target": "store_getruns",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L148",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_store_ts",
+      "_tgt": "store_getsitestate",
+      "source": "apps_studio_lib_server_store_ts",
+      "target": "store_getsitestate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L157",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_store_ts",
+      "_tgt": "store_getsystemstate",
+      "source": "apps_studio_lib_server_store_ts",
+      "target": "store_getsystemstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L166",
+      "weight": 1.0,
+      "_src": "apps_studio_lib_server_store_ts",
+      "_tgt": "store_getstats",
+      "source": "apps_studio_lib_server_store_ts",
+      "target": "store_getstats",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/studio/lib/server/store.ts",
+      "source_location": "L132",
+      "weight": 1.0,
+      "_src": "store_addsource",
+      "_tgt": "store_now",
+      "source": "store_now",
+      "target": "store_addsource",
       "confidence_score": 1.0
     }
   ],

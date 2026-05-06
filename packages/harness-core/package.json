@@ -6,9 +6,9 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@personal-wiki-harness/agent-runtime": "workspace:*",
-    "@personal-wiki-harness/meta-skill-core": "workspace:*",
-    "@personal-wiki-harness/site-compiler": "workspace:*",
-    "@personal-wiki-harness/wiki-core": "workspace:*"
+    "@personal-wiki-harness/agent-runtime": "0.1.0",
+    "@personal-wiki-harness/meta-skill-core": "0.1.0",
+    "@personal-wiki-harness/site-compiler": "0.1.0",
+    "@personal-wiki-harness/wiki-core": "0.1.0"
   }
 }
