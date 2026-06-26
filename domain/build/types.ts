@@ -21,6 +21,7 @@ export interface ToolCallRecord {
   input: unknown;
   outputPreview: string;
   outputPath?: string;
+  attempts: number;
   startedAt: string;
   finishedAt: string;
   status: "ok" | "error";

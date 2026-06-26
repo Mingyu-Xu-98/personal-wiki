@@ -252,12 +252,15 @@ async function callTool(input: {
   parentId: string;
   name: string;
   input: unknown;
+  maxAttempts?: number;
 }): Promise<void> {
   const span = input.recorder.start("ai.toolCall", {
     tool: input.name,
     input: input.input,
   }, input.parentId);
-  const record = await input.registry.call(input.name, input.input, input.run);
+  const record = await input.registry.call(input.name, input.input, input.run, {
+    maxAttempts: input.maxAttempts ?? 2,
+  });
   input.run.toolTrace.push(record);
   input.run.updatedAt = new Date().toISOString();
   if (record.status === "ok") input.recorder.end(span, record);

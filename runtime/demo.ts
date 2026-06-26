@@ -36,6 +36,7 @@ console.log(JSON.stringify({
   step: result.run.currentStep,
   versions: result.run.versions.length,
   toolCalls: result.run.toolTrace.map((tool) => tool.name),
+  attempts: result.run.toolTrace.map((tool) => ({ name: tool.name, attempts: tool.attempts })),
   approvals: result.approvals.map((approval) => approval.status),
   mode: manualApproval ? "manual-approval-resume" : "auto-approval",
   runDir: result.runDir,

@@ -16,32 +16,41 @@ export class ToolRegistry {
     }));
   }
 
-  async call(name: string, input: unknown, run: HarnessRun): Promise<ToolCallRecord> {
+  async call(name: string, input: unknown, run: HarnessRun, options: { maxAttempts?: number } = {}): Promise<ToolCallRecord> {
     const tool = this.tools.get(name);
     if (!tool) throw new Error(`Unknown tool: ${name}`);
 
     const startedAt = new Date().toISOString();
-    try {
-      const output = await tool.execute(input, run);
-      return {
-        id: crypto.randomUUID(),
-        name,
-        input,
-        outputPreview: output.slice(0, 240),
-        startedAt,
-        finishedAt: new Date().toISOString(),
-        status: "ok",
-      };
-    } catch (err) {
-      return {
-        id: crypto.randomUUID(),
-        name,
-        input,
-        outputPreview: err instanceof Error ? err.message : String(err),
-        startedAt,
-        finishedAt: new Date().toISOString(),
-        status: "error",
-      };
+    const maxAttempts = Math.max(1, options.maxAttempts ?? 1);
+    let lastError = "";
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        const output = await tool.execute(input, run);
+        return {
+          id: crypto.randomUUID(),
+          name,
+          input,
+          outputPreview: output.slice(0, 240),
+          attempts: attempt,
+          startedAt,
+          finishedAt: new Date().toISOString(),
+          status: "ok",
+        };
+      } catch (err) {
+        lastError = err instanceof Error ? err.message : String(err);
+      }
     }
+
+    return {
+      id: crypto.randomUUID(),
+      name,
+      input,
+      outputPreview: lastError,
+      attempts: maxAttempts,
+      startedAt,
+      finishedAt: new Date().toISOString(),
+      status: "error",
+    };
   }
 }

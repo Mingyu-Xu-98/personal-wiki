@@ -8,6 +8,7 @@ It provides:
 - `workflow-runner`: executes durable steps, calls tools, records approvals, and captures versions.
 - `trace-recorder`: records OpenTelemetry-style span trees.
 - `tool-registry`: builds scoped tool manifests and records tool calls.
+- tool calls record attempt counts and support bounded retries.
 - `run-store`: persists runs, traces, and approvals under `workspace/runs`.
 - `approval-gate`: creates human-in-the-loop checkpoints.
 - `sandbox-runner`: writes and validates generated artifacts under `workspace/artifacts`.
