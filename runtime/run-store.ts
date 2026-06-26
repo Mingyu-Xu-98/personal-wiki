@@ -40,9 +40,19 @@ export class RunStore {
     await fs.writeFile(paths.traceJson, `${JSON.stringify(trace, null, 2)}\n`);
   }
 
+  async loadTrace(runId: string): Promise<TraceSpan[]> {
+    const json = await fs.readFile(this.paths(runId).traceJson, "utf8");
+    return JSON.parse(json) as TraceSpan[];
+  }
+
   async saveApprovals(runId: string, approvals: ApprovalRequest[]): Promise<void> {
     const paths = this.paths(runId);
     await fs.mkdir(paths.runDir, { recursive: true });
     await fs.writeFile(paths.approvalsJson, `${JSON.stringify(approvals, null, 2)}\n`);
+  }
+
+  async loadApprovals(runId: string): Promise<ApprovalRequest[]> {
+    const json = await fs.readFile(this.paths(runId).approvalsJson, "utf8");
+    return JSON.parse(json) as ApprovalRequest[];
   }
 }

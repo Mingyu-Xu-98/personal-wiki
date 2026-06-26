@@ -1,7 +1,11 @@
 import type { ApprovalRequest } from "./types.js";
 
 export class ApprovalGate {
-  private readonly approvals: ApprovalRequest[] = [];
+  private readonly approvals: ApprovalRequest[];
+
+  constructor(initialApprovals: ApprovalRequest[] = []) {
+    this.approvals = [...initialApprovals];
+  }
 
   request(input: {
     runId: string;
@@ -25,5 +29,17 @@ export class ApprovalGate {
 
   all(): ApprovalRequest[] {
     return [...this.approvals];
+  }
+
+  approve(id: string): ApprovalRequest {
+    const approval = this.approvals.find((item) => item.id === id);
+    if (!approval) throw new Error(`Unknown approval: ${id}`);
+    approval.status = "approved";
+    approval.resolvedAt = new Date().toISOString();
+    return approval;
+  }
+
+  firstPending(): ApprovalRequest | undefined {
+    return this.approvals.find((item) => item.status === "pending");
   }
 }

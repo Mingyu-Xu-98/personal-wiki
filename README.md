@@ -20,9 +20,12 @@ docs/                   architecture and operating model
 npm install
 npm run check
 npm run demo
+npm run demo:approval
 ```
 
 The demo loads the `site-builder` agent from the file system, creates a durable run, records trace spans, calls scoped tools, creates an approval checkpoint, validates an artifact through the sandbox contract, writes a build version, and runs the agent eval case.
+
+`npm run demo:approval` pauses at the approval gate, reloads the persisted run from disk, approves it, and resumes validation/version capture.
 
 The generated run state is written under:
 

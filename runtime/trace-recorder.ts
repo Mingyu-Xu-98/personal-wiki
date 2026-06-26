@@ -1,7 +1,11 @@
 import type { TraceSpan } from "./types.js";
 
 export class TraceRecorder {
-  private readonly spans: TraceSpan[] = [];
+  private readonly spans: TraceSpan[];
+
+  constructor(initialSpans: TraceSpan[] = []) {
+    this.spans = [...initialSpans];
+  }
 
   start(name: string, input?: unknown, parentId?: string): TraceSpan {
     const span: TraceSpan = {

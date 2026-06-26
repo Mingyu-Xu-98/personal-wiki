@@ -1,6 +1,6 @@
 import path from "node:path";
 import { loadAgent } from "./agent-loader.js";
-import { runSiteBuildWorkflow } from "./workflow-runner.js";
+import { resumeSiteBuildWorkflow, runSiteBuildWorkflow } from "./workflow-runner.js";
 import { evaluateRun, loadAgentEvalCases } from "./eval-runner.js";
 import type { BuildIntent } from "../domain/index.js";
 
@@ -16,7 +16,13 @@ const intent: BuildIntent = {
   createdAt: new Date().toISOString(),
 };
 
-const result = await runSiteBuildWorkflow(agent, intent);
+const manualApproval = process.argv.includes("--manual-approval");
+const initial = await runSiteBuildWorkflow(agent, intent, {
+  approvalMode: manualApproval ? "manual" : "auto",
+});
+const result = manualApproval && initial.run.status === "awaiting_approval"
+  ? await resumeSiteBuildWorkflow(agent, initial.run.id)
+  : initial;
 const evalCases = await loadAgentEvalCases(path.join(root, "agents/site-builder"));
 const evals = await evaluateRun({
   run: result.run,
@@ -31,6 +37,7 @@ console.log(JSON.stringify({
   versions: result.run.versions.length,
   toolCalls: result.run.toolTrace.map((tool) => tool.name),
   approvals: result.approvals.map((approval) => approval.status),
+  mode: manualApproval ? "manual-approval-resume" : "auto-approval",
   runDir: result.runDir,
   artifactPath: result.run.versions[0]?.artifactPath,
   evals,
