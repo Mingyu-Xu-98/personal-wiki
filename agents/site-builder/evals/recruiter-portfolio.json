@@ -1,0 +1,9 @@
+{
+  "id": "recruiter-portfolio",
+  "description": "Build a recruiter-facing portfolio from selected wiki context with traceable source grounding.",
+  "expected": {
+    "requiresContentModel": true,
+    "requiresSiteArtifact": true,
+    "requiresValidation": true
+  }
+}

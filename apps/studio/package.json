@@ -4,25 +4,28 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack -H 127.0.0.1 -p 3006",
     "build": "next build",
     "check": "tsc -p tsconfig.json --pretty false",
     "start": "next start"
   },
-  "exports": {
-    ".": "./src/index.ts"
-  },
   "dependencies": {
+    "@personal-wiki-harness/agent-runtime": "0.1.0",
+    "@personal-wiki-harness/engine-core": "0.1.0",
     "@personal-wiki-harness/harness-core": "0.1.0",
     "@personal-wiki-harness/meta-skill-core": "0.1.0",
+    "@personal-wiki-harness/site-compiler": "0.1.0",
     "@personal-wiki-harness/wiki-core": "0.1.0",
     "next": "^16.1.6",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^25.4.0",
     "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.0.0"
+    "@types/react-dom": "^19.0.0",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.1"
   }
 }

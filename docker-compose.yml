@@ -1,0 +1,25 @@
+name: personal-wiki-harness
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pwh-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-pwh}
+      POSTGRES_USER: ${POSTGRES_USER:-pwh}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pwh_local_dev}
+    ports:
+      - "127.0.0.1:${PWH_POSTGRES_PORT:-54322}:5432"
+    volumes:
+      - pwh-postgres-data:/var/lib/postgresql/data
+      - ./docs/db/schema.sql:/docker-entrypoint-initdb.d/001_schema.sql:ro
+      - ./docs/db:/workspace/db:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pwh} -d ${POSTGRES_DB:-pwh}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  pwh-postgres-data:

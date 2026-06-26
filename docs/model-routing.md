@@ -1,25 +1,93 @@
 # Model Routing
 
-The harness should use model tiers instead of binding core logic to one provider or one model name.
+Studio uses one LLM client manager for model selection:
 
-## Principle
+```txt
+apps/studio/lib/server/llm-client.ts
+```
 
-Spend strong-model reasoning where mistakes shape the whole run. Use cheaper tiers where work is bounded, checkable, or high-volume.
+It routes by use case instead of letting each feature read ad hoc environment variables.
 
-## Default Routing
+## Providers
 
-- `commander`: strong tier
-- `planner`: strong tier
-- `reflection`: strong tier
-- `system-skill-promotion`: strong tier
-- `coder`: balanced tier
-- `wiki-maintainer`: balanced tier
-- `site-assistant`: small tier
-- `summarizer`: small tier
-- `search`: embedding or retrieval tier
+```txt
+primary  -> PWH_LLM_BASE_URL / PWH_LLM_API_KEY
+economy  -> PWH_ECONOMY_LLM_BASE_URL / PWH_ECONOMY_LLM_API_KEY
+image    -> PWH_IMAGE_LLM_BASE_URL / PWH_IMAGE_LLM_API_KEY
+```
 
-## Why This Matters
+Each provider also has a wire protocol:
 
-The commander decides intent, context, tools, and recovery. That role should use the best available reasoning. Website-internal AI calls are usually narrower: answer a visitor question, summarize selected wiki content, or help navigate a compiled site. Those should default to smaller, lower-cost models with strict context boundaries.
+```txt
+PWH_LLM_WIRE_API=responses
+PWH_ECONOMY_LLM_WIRE_API=chat-completions
+PWH_IMAGE_LLM_WIRE_API=chat-completions
+```
 
-The routing decision is part of the run ledger so later reflection can tell whether the chosen tier was sufficient.
+If the wire protocol is omitted, Studio infers `responses` for `code.memect.cn` and otherwise defaults to `chat-completions`.
+
+## Use Cases
+
+```txt
+create-agent      primary, strong     user intent conversation
+wiki-curator      primary, balanced   source-grounded wiki maintenance
+site-builder      economy/primary     Builder Agent: content model, design usage plan, site plan, HTML artifact
+site-chatbot      economy, small      future visitor chatbot
+summarizer        economy, small      high-volume summarization
+image-generation  image/economy       future image generation
+```
+
+The route table is exposed to the admin overview without API keys or raw base URLs.
+
+## Cost Rule
+
+Spend the stronger model where decisions compound:
+
+- intent clarification
+- wiki mutation judgment
+- build-spec and major site direction changes
+- reflection and system skill promotion
+
+Use cheaper models where work is bounded and verifiable:
+
+- bounded Builder Agent site drafting when design refs and verification are available
+- website chatbot
+- summarization
+- structured rewrites
+
+## Current Low-Cost Test
+
+The economy endpoint was tested through the OpenAI-compatible `/models` and `/chat/completions` shape. `Kimi-K2.5-low` returned a successful chat response; `GLM-4.7-low` responded with rate limiting during the test.
+
+## Current Primary Test
+
+`https://code.memect.cn/v1` is a Codex/Claude Code style hub rather than a plain ChatCompletions gateway.
+
+Tested shape:
+
+```txt
+GET  /v1/models      -> 200
+POST /v1/responses   -> 200 with gpt-5.4
+POST /v1/messages    -> 503 when the Claude upstream is unavailable
+POST /v1/chat/completions -> not supported for gpt-5.4 on this hub
+```
+
+So the primary route should use:
+
+```txt
+PWH_LLM_BASE_URL=https://code.memect.cn/v1
+PWH_LLM_WIRE_API=responses
+PWH_CREATE_AGENT_MODEL=gpt-5.4
+```
+
+The local `.env.local` can set:
+
+```txt
+PWH_ECONOMY_LLM_BASE_URL=http://39.104.116.42:4000
+PWH_ECONOMY_CHAT_MODEL=Kimi-K2.5-low
+PWH_ECONOMY_SITE_BUILDER_MODEL=Kimi-K2.5-low
+PWH_SITE_CHATBOT_MODEL=Kimi-K2.5-low
+PWH_SUMMARIZER_MODEL=Kimi-K2.5-low
+```
+
+API keys stay in `.env.local` only.

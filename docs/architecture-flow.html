@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Personal Wiki Harness Architecture</title>
+  <style>
+    :root {
+      --bg: #f5f2ec;
+      --paper: #fffdf8;
+      --ink: #171615;
+      --muted: #706a60;
+      --line: #ded5c8;
+      --soft: #f8efe0;
+      --green: #1f7a55;
+      --green-soft: #eaf6ee;
+      --blue: #245f9f;
+      --blue-soft: #e8f1fb;
+      --violet: #6e48b7;
+      --violet-soft: #f1eafb;
+      --orange: #b86a16;
+      --orange-soft: #fff0d9;
+      --red: #a63c32;
+      --red-soft: #fae8e6;
+      --shadow: 0 18px 50px rgba(50, 42, 32, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.72), rgba(255,255,255,0)),
+        var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      width: min(1280px, calc(100vw - 40px));
+      margin: 0 auto;
+      padding: 34px 0 72px;
+    }
+
+    .hero {
+      display: grid;
+      gap: 22px;
+      padding: 34px;
+      border: 1px solid rgba(110, 72, 183, 0.2);
+      border-radius: 18px;
+      background: rgba(255, 253, 248, 0.9);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--violet);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, h4 { margin: 0; line-height: 1.18; letter-spacing: 0; }
+    h1 { max-width: 860px; font-size: clamp(36px, 5.2vw, 68px); }
+    h2 { margin-bottom: 16px; font-size: 28px; }
+    h3 { margin-bottom: 10px; font-size: 18px; }
+    h4 { margin-bottom: 8px; font-size: 14px; }
+    p { margin: 0; }
+
+    .lead {
+      max-width: 900px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      min-height: 112px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1.05;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .nav a {
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    section {
+      margin-top: 24px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 253, 248, 0.92);
+      box-shadow: var(--shadow);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .section-head p {
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .card.green { background: var(--green-soft); border-color: rgba(31, 122, 85, 0.24); }
+    .card.blue { background: var(--blue-soft); border-color: rgba(36, 95, 159, 0.24); }
+    .card.violet { background: var(--violet-soft); border-color: rgba(110, 72, 183, 0.24); }
+    .card.orange { background: var(--orange-soft); border-color: rgba(184, 106, 22, 0.26); }
+    .card.red { background: var(--red-soft); border-color: rgba(166, 60, 50, 0.22); }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .list {
+      display: grid;
+      gap: 8px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      position: relative;
+      padding-left: 17px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .list li::before {
+      content: "";
+      position: absolute;
+      top: 0.72em;
+      left: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--violet);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .step {
+      position: relative;
+      min-height: 150px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .step::after {
+      content: ">";
+      position: absolute;
+      top: 50%;
+      right: -9px;
+      transform: translateY(-50%);
+      color: #9b9286;
+      font-weight: 900;
+    }
+
+    .step:last-child::after { content: ""; }
+
+    .num {
+      display: inline-grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      margin-bottom: 10px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .step p,
+    .card p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .lane {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 12px;
+      align-items: stretch;
+      margin-top: 12px;
+    }
+
+    .lane-title {
+      display: grid;
+      place-items: center;
+      min-height: 78px;
+      padding: 14px;
+      border-radius: 12px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .nodes {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .node {
+      position: relative;
+      min-height: 78px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .node::after {
+      content: ">";
+      position: absolute;
+      right: -9px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9b9286;
+      font-weight: 900;
+    }
+
+    .node:last-child::after { content: ""; }
+    .node strong { display: block; margin-bottom: 5px; font-size: 13px; }
+    .node span { display: block; color: var(--muted); font-size: 12px; }
+
+    .stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .stack-row {
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .stack-label {
+      padding: 14px;
+      border-radius: 12px;
+      background: var(--soft);
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .stack-body {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .matrix {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .matrix th,
+    .matrix td {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    .matrix th {
+      background: #f4eadc;
+      color: var(--ink);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 6px;
+      background: #f0e8dd;
+      color: #231f1a;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .status.done { background: var(--green-soft); color: var(--green); }
+    .status.next { background: var(--orange-soft); color: var(--orange); }
+    .status.todo { background: var(--blue-soft); color: var(--blue); }
+
+    .callout {
+      padding: 16px;
+      border: 1px solid rgba(184, 106, 22, 0.24);
+      border-radius: 12px;
+      background: var(--orange-soft);
+      color: #4b3924;
+      font-size: 14px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 14px;
+    }
+
+    .footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 1040px) {
+      .top-grid, .grid-4, .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3, .split { grid-template-columns: 1fr; }
+      .nodes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .step::after, .node::after { content: ""; }
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(100% - 24px, 1280px); padding-top: 18px; }
+      .hero, section { padding: 20px; border-radius: 14px; }
+      .top-grid, .grid-2, .grid-4, .flow, .nodes, .lane, .stack-row { grid-template-columns: 1fr; }
+      .section-head { display: grid; align-items: start; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">Personal Wiki Harness / Architecture Blueprint</p>
+      <h1>个人 Wiki 是意义源，个人网站是编译产物</h1>
+      <p class="lead">
+        这个系统不是普通 AI 建站器。它是一个围绕个人知识库持续维护、结构化、验证、版本化的 Harness。
+        GUI 平台和本地 CLI 都只是入口，真正的核心是同一套 Personal Wiki Engine、Workspace Adapter、Tool Registry 和 Harness Runtime。
+      </p>
+      <div class="top-grid">
+        <div class="metric"><strong>2</strong><span>入口形态：GUI 平台 + 本地 CLI</span></div>
+        <div class="metric"><strong>3</strong><span>Wiki 操作：Ingest / Query / Lint</span></div>
+        <div class="metric"><strong>5</strong><span>关键工具：readManifest / readWikiIndex / searchWiki / readWikiPage / readSource</span></div>
+        <div class="metric"><strong>0 -> N</strong><span>当前真实 sub agent 为 0；目标是按阶段按需启动</span></div>
+      </div>
+      <nav class="nav">
+        <a href="#business">业务架构</a>
+        <a href="#user-flow">用户流程</a>
+        <a href="#llm-wiki">LLM Wiki 工程化</a>
+        <a href="#harness">Harness 架构</a>
+        <a href="#technical">技术架构</a>
+        <a href="#cli">CLI 总指挥</a>
+        <a href="#context">上下文保真</a>
+        <a href="#status">实现状态</a>
+      </nav>
+    </header>
+
+    <section id="business">
+      <div class="section-head">
+        <div>
+          <h2>业务架构</h2>
+          <p>用户看到的是一个个人网站平台；系统内部实际维护的是个人 Wiki 和构建流水线。</p>
+        </div>
+      </div>
+      <div class="grid-3">
+        <article class="card violet">
+          <span class="tag">用户价值</span>
+          <h3>把个人知识变成网站</h3>
+          <p>用户维护资料、项目、经历、文章、研究和偏好；系统把这些内容整理为 Wiki，再生成可发布或可导出的个人网站。</p>
+          <ul class="list">
+            <li>不从空白模板开始</li>
+            <li>网站来自自己的知识库</li>
+            <li>后续编辑可追溯到版本和来源</li>
+          </ul>
+        </article>
+        <article class="card green">
+          <span class="tag">平台形态</span>
+          <h3>GUI 托管平台</h3>
+          <p>面向普通用户。提供登录、知识库、创建对话、预览、发布、我的网站和版本管理。Harness 不暴露给用户。</p>
+          <ul class="list">
+            <li>多知识库隔离</li>
+            <li>对话确认网站需求</li>
+            <li>发布前预览和继续修改</li>
+          </ul>
+        </article>
+        <article class="card blue">
+          <span class="tag">本地形态</span>
+          <h3>CLI 本地工作区</h3>
+          <p>面向本地资料很多、希望保留文件控制权的用户。CLI 读取本地文件引用，构造 Wiki，并导出静态 HTML。</p>
+          <ul class="list">
+            <li>原始文件默认不复制</li>
+            <li><code>.pwh/</code> 保存派生知识和构建产物</li>
+            <li>网站可作为 HTML 分享</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="user-flow">
+      <div class="section-head">
+        <div>
+          <h2>整体用户流程</h2>
+          <p>GUI 和 CLI 的交互方式不同，但底层都走同一条 Wiki -> Harness -> Site 的编译链。</p>
+        </div>
+      </div>
+      <div class="flow">
+        <div class="step">
+          <span class="num">1</span>
+          <h3>选择入口</h3>
+          <p>GUI 用户登录平台；CLI 用户进入本地 workspace。</p>
+        </div>
+        <div class="step">
+          <span class="num">2</span>
+          <h3>选择知识库</h3>
+          <p>GUI 选择隔离知识库；CLI 读取 <code>.pwh/workspace.json</code>。</p>
+        </div>
+        <div class="step">
+          <span class="num">3</span>
+          <h3>摄入资料</h3>
+          <p>链接或上传 source，抽取 ontology，生成或更新 Wiki。</p>
+        </div>
+        <div class="step">
+          <span class="num">4</span>
+          <h3>澄清意图</h3>
+          <p>确认要不要建站，以及网站类型、受众、风格、硬约束。</p>
+        </div>
+        <div class="step">
+          <span class="num">5</span>
+          <h3>构建验证</h3>
+          <p>Harness 读取 Wiki、调用工具、生成 site plan、编译并验证。</p>
+        </div>
+        <div class="step">
+          <span class="num">6</span>
+          <h3>版本处理</h3>
+          <p>发布到平台或导出 HTML；保留版本、工具记录和来源引用。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="llm-wiki">
+      <div class="section-head">
+        <div>
+          <h2>LLM Wiki 工程化</h2>
+          <p>核心不是上传文件后做 RAG，而是把资料维护成持续增长的、可链接、可 lint、可编译的 Wiki。</p>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-title">三层知识结构</div>
+        <div class="nodes">
+          <div class="node"><strong>Raw Sources</strong><span>不可变证据；LLM 只读；本地默认 file:// 引用。</span></div>
+          <div class="node"><strong>Ontology Candidates</strong><span>实体、人物、事件、技能、claim、关系，带证据引用。</span></div>
+          <div class="node"><strong>Persistent Wiki</strong><span>index.wiki、log.wiki、实体页、概念页、source summary。</span></div>
+          <div class="node"><strong>Lint And Repair</strong><span>检查孤立页、矛盾、缺引用、过期 source、重复实体。</span></div>
+          <div class="node"><strong>Compiled Site</strong><span>网站是产物，不能反过来成为知识源。</span></div>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top:14px">
+        <article class="card green">
+          <span class="tag">Ingest</span>
+          <h3>一次摄入是 Wiki Mutation</h3>
+          <p>不是简单摘要。一个 source 可能影响摘要页、实体页、概念页、关系、index 和 log。</p>
+        </article>
+        <article class="card blue">
+          <span class="tag">Query</span>
+          <h3>先读 Wiki，再读 Source</h3>
+          <p>agent 先读 index，再 searchWiki/readWikiPage，只有需要证据时才 readSource。</p>
+        </article>
+        <article class="card orange">
+          <span class="tag">Lint</span>
+          <h3>维护是核心能力</h3>
+          <p>知识库越大，越需要定期检查一致性、引用完整性、实体重复和过期内容。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="harness">
+      <div class="section-head">
+        <div>
+          <h2>Harness 架构</h2>
+          <p>如果不是模型本身，就是 Harness。Harness 负责节奏、状态、工具、上下文、执行、验证和版本。</p>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="stack-row">
+          <div class="stack-label">Commander</div>
+          <div class="stack-body">控制阶段和节奏：workspace-discovery、source-linking、ontology-ingest、wiki-maintenance、intent-clarification、site-planning、site-building、verification、versioning、reflection。</div>
+        </div>
+        <div class="stack-row">
+          <div class="stack-label">Context Ledger</div>
+          <div class="stack-body">记录本轮使用的 wiki pages、source ids、tool results、model routing、hard/soft constraints 和 preserved refs。</div>
+        </div>
+        <div class="stack-row">
+          <div class="stack-label">Tool Registry</div>
+          <div class="stack-body">统一工具边界：readManifest、readWikiIndex、searchWiki、readWikiPage、readSource。工具调用必须写入 ToolCallRecord。</div>
+        </div>
+        <div class="stack-row">
+          <div class="stack-label">Plan / Execute / Verify</div>
+          <div class="stack-body">把用户 intent 转成 HarnessPlan，执行工具和内部 handlers，验证是否满足知识来源、隐私、设计、构建和发布约束。</div>
+        </div>
+        <div class="stack-row">
+          <div class="stack-label">Version / Reflection</div>
+          <div class="stack-body">生成 BuildVersion，保留 contentModel、sitePlan、toolCalls、lintIssues，并把可复用经验进入 System Meta Skill 候选。</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="technical">
+      <div class="section-head">
+        <div>
+          <h2>技术架构</h2>
+          <p>核心原则是 GUI 和 CLI 不各自实现一套逻辑，而是共同调用 engine-core。</p>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-title">Entry Points</div>
+        <div class="nodes">
+          <div class="node"><strong>apps/studio</strong><span>登录、知识库、创建对话、预览、发布、版本。</span></div>
+          <div class="node"><strong>apps/cli</strong><span>init/link/ingest/build/status，本地 .pwh 工作区。</span></div>
+          <div class="node"><strong>engine-core</strong><span>统一 WorkspaceAdapter、ToolRegistry、ingest/build 服务。</span></div>
+          <div class="node"><strong>harness-core</strong><span>BuildIntent、HarnessRun、Plan、ToolCallRecord、BuildVersion。</span></div>
+          <div class="node"><strong>site-compiler</strong><span>ContentModel、SitePlan、SectionSpec。</span></div>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-title">Knowledge Layer</div>
+        <div class="nodes">
+          <div class="node"><strong>wiki-core</strong><span>SourceDocument、WikiEntity、WikiPage、WikiRelation、OntologyExtraction。</span></div>
+          <div class="node"><strong>WorkspaceAdapter</strong><span>hosted storage 或 local .pwh。</span></div>
+          <div class="node"><strong>snapshot.json</strong><span>结构化 Wiki 状态。</span></div>
+          <div class="node"><strong>index/log</strong><span>人可读导航与时间线。</span></div>
+          <div class="node"><strong>builds/dist</strong><span>版本和静态网站产物。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cli">
+      <div class="section-head">
+        <div>
+          <h2>CLI 总指挥流程</h2>
+          <p>CLI 不应该只是命令集合，而应该逐步引导用户完成本地知识库构造，再询问是否基于 Wiki 生成网站。</p>
+        </div>
+      </div>
+      <div class="flow">
+        <div class="step"><span class="num">1</span><h3>发现工作区</h3><p>创建或读取 <code>.pwh/</code>，识别 source policy。</p></div>
+        <div class="step"><span class="num">2</span><h3>链接本地文件</h3><p>保存 file URI、大小、mtime、fingerprint；默认不复制。</p></div>
+        <div class="step"><span class="num">3</span><h3>抽取 Ontology</h3><p>生成候选实体、事件、技能、claim、关系，并保留 evidence refs。</p></div>
+        <div class="step"><span class="num">4</span><h3>维护 Wiki</h3><p>更新 source pages、entity pages、index.wiki、log.wiki 和 snapshot。</p></div>
+        <div class="step"><span class="num">5</span><h3>交互确认</h3><p>询问用户是否要建站；确认类型、受众、风格、隐私边界。</p></div>
+        <div class="step"><span class="num">6</span><h3>构建导出</h3><p>调用 tools，生成 BuildVersion 和 <code>dist/index.html</code>。</p></div>
+      </div>
+      <div class="split" style="margin-top:14px">
+        <div class="card red">
+          <span class="tag">Hard Constraints</span>
+          <h3>硬约束：违反就阻断或询问</h3>
+          <ul class="list">
+            <li>raw sources 不可修改</li>
+            <li>知识库必须隔离</li>
+            <li>本地文件访问必须来自已链接引用</li>
+            <li>私密内容不能默认发布</li>
+            <li>构建产物必须版本化</li>
+            <li>发布必须由用户明确确认</li>
+          </ul>
+        </div>
+        <div class="card orange">
+          <span class="tag">Soft Constraints</span>
+          <h3>软约束：指导质量和品味</h3>
+          <ul class="list">
+            <li>不要模板化</li>
+            <li>保持个人表达，不要营销腔</li>
+            <li>风格可以随受众调整</li>
+            <li>信息密度和页面长度可权衡</li>
+            <li>优先低成本模型处理摘要和小任务</li>
+            <li>必要时把取舍写入版本说明</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="context">
+      <div class="section-head">
+        <div>
+          <h2>Sub Agent 与上下文保真</h2>
+          <p>当前真实 sub agent 数量是 0。目标不是越多越好，而是按阶段启动小而明确的内部角色，并且不靠完整聊天历史传递信息。</p>
+        </div>
+      </div>
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>目标角色</th>
+            <th>输入</th>
+            <th>输出</th>
+            <th>上下文保真方式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Intent Analyst</td>
+            <td>用户意图、知识库摘要、硬/软约束</td>
+            <td>需求结构、缺失问题、确认点</td>
+            <td>保留用户最终确认和约束 id</td>
+          </tr>
+          <tr>
+            <td>Wiki Curator</td>
+            <td>source refs、extracts、现有 index</td>
+            <td>OntologyExtraction、WikiMutationPlan</td>
+            <td>保留 source/page/entity/tool-call refs</td>
+          </tr>
+          <tr>
+            <td>Site Planner</td>
+            <td>wiki index、搜索结果、目标受众</td>
+            <td>ContentModel、SitePlan、section specs</td>
+            <td>每个 section 带 sourcePageIds</td>
+          </tr>
+          <tr>
+            <td>Content Writer</td>
+            <td>section spec、相关 wiki pages、风格约束</td>
+            <td>页面文案草稿</td>
+            <td>保留引用和未解决问题</td>
+          </tr>
+          <tr>
+            <td>Verifier</td>
+            <td>产物、约束、source refs、tool trace</td>
+            <td>lint issues、blocking findings</td>
+            <td>保留失败证据和修复建议</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout" style="margin-top:14px">
+        关键原则：摘要可以有损，引用和产物不能有损。Sub agent 返回 summary 只是为了让主流程快速理解；
+        真正防丢的是 evidenceRefs、artifact refs、mustCarryForward 和 toolCalls。后续阶段需要细节时必须通过工具重新读取。
+      </div>
+    </section>
+
+    <section id="status">
+      <div class="section-head">
+        <div>
+          <h2>实现状态</h2>
+          <p>这张表区分当前已经落地、下一步应该做、以及仍属于目标设计的部分。</p>
+        </div>
+      </div>
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>模块</th>
+            <th>当前状态</th>
+            <th>说明</th>
+            <th>下一步</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GUI Studio</td>
+            <td><span class="status done">已实现骨架</span></td>
+            <td>知识库、创建页面、我的网站、版本流程已有基础。</td>
+            <td>把 create flow 接到更完整的 engine/harness tool loop。</td>
+          </tr>
+          <tr>
+            <td>CLI Local</td>
+            <td><span class="status done">最小闭环</span></td>
+            <td><code>init/link/ingest/review-plan/handoff-plan/apply-plan/plans/events/verify/audit/build/status</code> 已有；能生成 <code>.pwh/wiki</code>、事件日志和静态 HTML；<code>ingest --model-curator</code> 可选调用模型抽取 ontology 候选，并保持 plan-first。</td>
+            <td>加入 commander 交互节奏和事件 replay/reducer。</td>
+          </tr>
+          <tr>
+            <td>Tool Registry</td>
+            <td><span class="status done">已接入</span></td>
+            <td>工具调用会进入 BuildVersion 的 toolCalls。</td>
+            <td>扩展 writeWikiPatch、verifySite、compileSite 等工具。</td>
+          </tr>
+          <tr>
+            <td>Workflow Spec</td>
+            <td><span class="status done">已接入 runtime</span></td>
+            <td><code>docs/workflow.md</code> 是可读规则；<code>harness-core/src/workflow.ts</code> 是 typed contract，HarnessPlan 会记录 workflowSpecId 和 phase ids，事件会校验 phase/tool gate。</td>
+            <td>下一步让具体阶段消费 model-backed executor 的结构化结果。</td>
+          </tr>
+          <tr>
+            <td>Event Log</td>
+            <td><span class="status done">已落地 CLI</span></td>
+            <td><code>.pwh/events.jsonl</code> 会记录 workspace、source、mutation plan、build、version 事件，并保存 workflow phase/tool。</td>
+            <td>下一步增加事件 replay/reducer。</td>
+          </tr>
+          <tr>
+            <td>Ontology / Mutation Plan</td>
+            <td><span class="status done">Studio 确认流已接入</span></td>
+            <td>已有 OntologyExtraction / WikiClaim 类型，CLI ingest 会生成并保存 WikiMutationPlan；<code>--plan-only</code> 可暂停，<code>review-plan</code> 可解释计划，<code>handoff-plan</code> 可保留批次和证据引用，<code>apply-plan</code> 再写入 wiki。wiki-curator 的 <code>ontology-extraction</code> artifact 已可被清洗后合入 mutation plan，CLI 和 Studio 均有可选模型入口；Studio 已支持待确认、确认入库、拒绝、编辑后重新分析。</td>
+            <td>下一步把 pending review、知识库和版本从内存迁到持久化存储。</td>
+          </tr>
+          <tr>
+            <td>Sub Agents</td>
+            <td><span class="status done">结构化产物链路已接入</span></td>
+            <td>Commander 会生成 SubAgentTrace 和 bounded packet；agent-runtime 已有 dry-run executor、model-backed executor、OpenAI-compatible runtime adapter 和 tool gate；<code>content-model</code> / <code>site-plan</code> artifact 已能进入 BuildVersion；<code>ontology-extraction</code> artifact 已能进入 WikiMutationPlan，并强制 pending review。</td>
+            <td>下一步补生产级模型策略、失败恢复和 Studio 可视化。</td>
+          </tr>
+          <tr>
+            <td>Verifier / Lint</td>
+            <td><span class="status next">基础 verifier 已接入</span></td>
+            <td><code>pwh verify</code> / <code>pwh audit</code> 会读取 manifest、snapshot 和 events，检查 source refs、index/log、plan review/handoff/apply 顺序、build/version 记录和 workflow gates；<code>pwh build</code> 在构建前和记版本前都会阻断硬失败。</td>
+            <td>下一步增加 Studio 知识库边界、发布确认、预览状态、source grounding 检查。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <p class="footer">
+      Generated for Personal Wiki Harness. Open this file directly: docs/architecture-flow.html
+    </p>
+  </main>
+</body>
+</html>

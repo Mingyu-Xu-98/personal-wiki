@@ -1,0 +1,13 @@
+{
+  "name": "@personal-wiki-harness/engine-core",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@personal-wiki-harness/agent-runtime": "0.1.0",
+    "@personal-wiki-harness/harness-core": "0.1.0",
+    "@personal-wiki-harness/wiki-core": "0.1.0"
+  }
+}

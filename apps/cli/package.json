@@ -1,0 +1,17 @@
+{
+  "name": "@personal-wiki-harness/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "pwh": "./bin/pwh.mjs"
+  },
+  "scripts": {
+    "check": "tsc -p tsconfig.json --pretty false"
+  },
+  "dependencies": {
+    "@personal-wiki-harness/engine-core": "0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.4.0"
+  }
+}

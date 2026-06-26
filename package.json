@@ -9,13 +9,53 @@
     "apps/*"
   ],
   "scripts": {
-    "check": "npm run check:packages && npm run check -w @personal-wiki-harness/studio",
+    "check": "npm run check:packages && npm run check -w @personal-wiki-harness/cli && npm run check -w @personal-wiki-harness/studio",
     "check:packages": "tsc -p tsconfig.packages.json --pretty false",
+    "cli": "node apps/cli/bin/pwh.mjs",
     "demo": "node packages/harness-core/src/demo.ts",
     "dev": "npm run dev -w @personal-wiki-harness/studio",
-    "build": "npm run build -w @personal-wiki-harness/studio"
+    "restart:studio": "node scripts/restart-studio.mjs",
+    "worker": "node scripts/worker.mjs",
+    "worker:once": "node scripts/worker.mjs --once",
+    "inspect:agents": "node scripts/inspect-agents.mjs",
+    "sync:magic-ui": "node scripts/sync-magic-ui-mcp.mjs",
+    "sync:design-skills": "node scripts/sync-design-skills-zip.mjs",
+    "db": "node scripts/db.mjs",
+    "db:up": "node scripts/db.mjs up",
+    "db:down": "node scripts/db.mjs down",
+    "db:reset": "node scripts/db.mjs reset",
+    "db:ps": "node scripts/db.mjs ps",
+    "db:logs": "node scripts/db.mjs logs",
+    "db:psql": "node scripts/db.mjs psql",
+    "db:migrate": "node scripts/db.mjs migrate",
+    "db:check": "node scripts/db.mjs check",
+    "db:snapshot": "node scripts/db.mjs snapshot",
+    "db:import-auth": "node scripts/db.mjs import-auth",
+    "db:url": "node scripts/db.mjs url",
+    "build": "npm run build -w @personal-wiki-harness/studio",
+    "smoke:ontology": "node scripts/smoke-ontology-curator.mjs",
+    "smoke:llm-routing": "node scripts/smoke-llm-routing.mjs",
+    "smoke:responses-runtime": "node scripts/smoke-responses-runtime.mjs",
+    "smoke:postgres-auth": "node scripts/smoke-postgres-auth.mjs",
+    "smoke:postgres-knowledge": "node scripts/smoke-postgres-knowledge.mjs",
+    "smoke:postgres-builds": "node scripts/smoke-postgres-builds.mjs",
+    "smoke:postgres-hydrate": "node scripts/smoke-postgres-hydrate.mjs",
+    "smoke:postgres-queue": "node scripts/smoke-postgres-queue.mjs",
+    "smoke:upload-source": "node scripts/smoke-upload-source.mjs",
+    "smoke:worker": "node scripts/smoke-worker.mjs",
+    "smoke:cli": "node scripts/smoke-cli.mjs",
+    "smoke:build-jobs": "node scripts/smoke-build-jobs.mjs",
+    "smoke:eve-runtime": "node scripts/smoke-eve-runtime.mjs",
+    "smoke:site-agents": "node scripts/smoke-site-agents.mjs",
+    "smoke:design-assets": "node scripts/smoke-design-assets.mjs",
+    "smoke:design-skills": "node scripts/smoke-design-skills.mjs",
+    "smoke:studio": "node scripts/smoke-studio-flow.mjs"
   },
   "devDependencies": {
     "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@types/pg": "^8.20.0",
+    "pg": "^8.21.0"
   }
 }

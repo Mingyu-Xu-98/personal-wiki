@@ -5,3 +5,11 @@ dist/
 .DS_Store
 coverage/
 *.tsbuildinfo
+.env
+.env.*
+!.env.example
+!.env.local.example
+!.env.db.example
+.pwh-studio/
+.claude/
+graphify-out/cache/

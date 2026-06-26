@@ -1,0 +1,11 @@
+{
+  "id": "full-local-build",
+  "description": "A smoke eval for durable wiki-to-site generation with trace, approval, sandbox validation, and version output.",
+  "intent": {
+    "title": "Personal Wiki Site",
+    "prompt": "Compile the selected personal wiki into a clear website draft.",
+    "audience": "general",
+    "desiredArtifact": "site",
+    "constraints": ["Use selected knowledge base only.", "Record a durable trace."]
+  }
+}

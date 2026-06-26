@@ -15,13 +15,20 @@ export async function POST(request: Request) {
   }
 
   try {
-    registerUser({ name, email, password });
+    await registerUser({ name, email, password });
     const user = await loginUser(email, password);
     return NextResponse.json({ user });
   } catch (error) {
+    const message = error instanceof Error ? error.message : "Registration failed.";
+    const isDatabaseUnavailable =
+      message.includes("ECONNREFUSED") || message.includes("connect") || message.includes("54322");
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Registration failed." },
-      { status: 409 }
+      {
+        error: isDatabaseUnavailable
+          ? "PostgreSQL is not running. Start Docker/Postgres or switch Studio to local JSON mode."
+          : message
+      },
+      { status: isDatabaseUnavailable ? 500 : 409 }
     );
   }
 }

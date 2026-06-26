@@ -1,17 +1,20 @@
 import { NextResponse } from "next/server";
 import { getAllUsers, requireAdmin } from "../../../../lib/server/auth";
-import { getStats, getSystemState } from "../../../../lib/server/store";
+import { getStats, getSystemState, prepareStudioState } from "../../../../lib/server/store";
 
 export async function GET() {
-  await requireAdmin();
-  const system = getSystemState();
+  const user = await requireAdmin();
+  await prepareStudioState(user.id);
+  const users = await getAllUsers();
+  const system = getSystemState(user.id);
   return NextResponse.json({
     stats: {
-      users: getAllUsers().length,
+      users: users.length,
       ...getStats()
     },
-    users: getAllUsers(),
+    users,
     skills: system.skills,
-    modelRouting: system.modelRouting
+    modelRouting: system.modelRouting,
+    modelRuntime: system.modelRuntime
   });
 }
