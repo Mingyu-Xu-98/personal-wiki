@@ -21,6 +21,7 @@ npm install
 npm run check
 npm run demo
 npm run demo:approval
+npm run inspect:runs
 ```
 
 The demo loads the `site-builder` agent from the file system, creates a durable run, records trace spans, calls scoped tools, creates an approval checkpoint, validates an artifact through the sandbox contract, writes a build version, and runs the agent eval case.
