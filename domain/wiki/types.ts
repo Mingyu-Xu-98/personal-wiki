@@ -60,3 +60,13 @@ export interface WikiLintIssue {
   message: string;
   targetId?: string;
 }
+
+export interface WikiSnapshot {
+  generatedAt: string;
+  sources: SourceDocument[];
+  entities: WikiEntity[];
+  pages: WikiPage[];
+  relations: WikiRelation[];
+  events: WikiEvent[];
+  lintIssues: WikiLintIssue[];
+}

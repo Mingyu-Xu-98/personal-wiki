@@ -5,7 +5,7 @@ import { evaluateRun, loadAgentEvalCases } from "./eval-runner.js";
 import type { BuildIntent } from "../domain/index.js";
 
 const root = process.cwd();
-const agent = await loadAgent(path.join(root, "agents/site-builder"));
+const agent = await loadAgent(path.join(root, "agents/commander"));
 
 const intent: BuildIntent = {
   id: crypto.randomUUID(),
@@ -23,7 +23,7 @@ const initial = await runSiteBuildWorkflow(agent, intent, {
 const result = manualApproval && initial.run.status === "awaiting_approval"
   ? await resumeSiteBuildWorkflow(agent, initial.run.id)
   : initial;
-const evalCases = await loadAgentEvalCases(path.join(root, "agents/site-builder"));
+const evalCases = await loadAgentEvalCases(path.join(root, "agents/commander"));
 const evals = await evaluateRun({
   run: result.run,
   trace: result.trace,

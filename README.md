@@ -22,6 +22,7 @@ npm run check
 npm run demo
 npm run demo:approval
 npm run inspect:runs
+npm run serve
 ```
 
 The demo loads the `site-builder` agent from the file system, creates a durable run, records trace spans, calls scoped tools, creates an approval checkpoint, validates an artifact through the sandbox contract, writes a build version, and runs the agent eval case.
@@ -44,3 +45,12 @@ workspace/artifacts/<run-id>/
 ## Principle
 
 Agents are workers. The harness is the project manager.
+
+## Runtime Surface
+
+- `GET /health`
+- `GET /agents`
+- `GET /runs`
+- `GET /artifacts/:runId/index.html`
+
+See `docs/production-surface.md` for the current production boundary.

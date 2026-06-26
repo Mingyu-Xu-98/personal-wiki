@@ -10,7 +10,8 @@
     "demo": "npm run build && node dist/runtime/demo.js",
     "demo:approval": "npm run build && node dist/runtime/demo.js --manual-approval",
     "inspect:agents": "npm run build && node dist/runtime/inspect-agents.js",
-    "inspect:runs": "npm run build && node dist/runtime/inspect-runs.js"
+    "inspect:runs": "npm run build && node dist/runtime/inspect-runs.js",
+    "serve": "npm run build && node dist/runtime/server.js"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

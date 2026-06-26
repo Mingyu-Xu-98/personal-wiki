@@ -57,11 +57,9 @@ async function validateAgentDirectory(agentDir: string, agent: AgentDefinition, 
   }
 
   for (const subagent of agent.subagents) {
-    const subagentDir = path.join(agentDir, "subagents", subagent);
-    try {
-      await fs.access(path.join(subagentDir, "agent.ts"));
-      await fs.access(path.join(subagentDir, "instructions.md"));
-    } catch {
+    const localSubagentDir = path.join(agentDir, "subagents", subagent);
+    const siblingSubagentDir = path.join(path.dirname(agentDir), subagent);
+    if (!await hasAgentFiles(localSubagentDir) && !await hasAgentFiles(siblingSubagentDir)) {
       issues.push({
         severity: "error",
         message: `Declared subagent '${subagent}' is missing agent.ts or instructions.md.`,
@@ -70,4 +68,14 @@ async function validateAgentDirectory(agentDir: string, agent: AgentDefinition, 
   }
 
   return issues;
+}
+
+async function hasAgentFiles(agentDir: string): Promise<boolean> {
+  try {
+    await fs.access(path.join(agentDir, "agent.ts"));
+    await fs.access(path.join(agentDir, "instructions.md"));
+    return true;
+  } catch {
+    return false;
+  }
 }

@@ -1,0 +1,6 @@
+{
+  "name": "full local build smoke",
+  "intent": "Build a website artifact from raw sources through wiki ingest and content compilation.",
+  "expectedTraceSpans": ["ai.eve.turn", "ai.streamText", "ai.toolCall"],
+  "expectedArtifact": "versioned html site artifact"
+}

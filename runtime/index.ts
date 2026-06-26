@@ -8,4 +8,5 @@ export * from "./approval-gate.js";
 export * from "./sandbox-runner.js";
 export * from "./builtin-tools.js";
 export * from "./eval-runner.js";
+export * from "./model-adapter.js";
 export * from "./workflow-runner.js";
