@@ -27,7 +27,14 @@ export class PostgresDatabase {
 
   async migrate(): Promise<void> {
     const schema = await fs.readFile(path.join(process.cwd(), "db/schema.sql"), "utf8");
-    await this.pool.query(schema);
+    const client = await this.pool.connect();
+    try {
+      await client.query("SELECT pg_advisory_lock($1)", [migrationLockId()]);
+      await client.query(schema);
+    } finally {
+      await client.query("SELECT pg_advisory_unlock($1)", [migrationLockId()]).catch(() => undefined);
+      client.release();
+    }
   }
 
   async verifyApiKey(rawKey: string): Promise<Principal | null> {
@@ -173,4 +180,8 @@ export function hashApiKey(rawKey: string): string {
 
 export function generateApiKey(): string {
   return `pwiki_${randomBytes(32).toString("base64url")}`;
+}
+
+function migrationLockId(): number {
+  return 947201337;
 }
