@@ -13,6 +13,7 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/agents ./agents
+COPY --from=build /app/db ./db
 COPY --from=build /app/domain ./domain
 COPY --from=build /app/runtime ./runtime
 COPY --from=build /app/workspace ./workspace

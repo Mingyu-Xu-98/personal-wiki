@@ -9,4 +9,7 @@ export * from "./sandbox-runner.js";
 export * from "./builtin-tools.js";
 export * from "./eval-runner.js";
 export * from "./model-adapter.js";
+export * from "./postgres.js";
+export * from "./security/auth.js";
+export * from "./security/deployment-policy.js";
 export * from "./workflow-runner.js";

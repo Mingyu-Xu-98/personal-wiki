@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: personal_wiki
+      POSTGRES_PASSWORD: personal_wiki
+      POSTGRES_DB: personal_wiki
+    ports:
+      - "5432:5432"
+    volumes:
+      - personal_wiki_pg:/var/lib/postgresql/data
+
+volumes:
+  personal_wiki_pg:

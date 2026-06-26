@@ -11,10 +11,16 @@
     "demo:approval": "npm run build && node dist/runtime/demo.js --manual-approval",
     "inspect:agents": "npm run build && node dist/runtime/inspect-agents.js",
     "inspect:runs": "npm run build && node dist/runtime/inspect-runs.js",
-    "serve": "npm run build && node dist/runtime/server.js"
+    "serve": "npm run build && node dist/runtime/server.js",
+    "db:migrate": "npm run build && node dist/runtime/db-admin.js migrate",
+    "db:create-user": "npm run build && node dist/runtime/db-admin.js create-user"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
+    "@types/pg": "^8.20.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "pg": "^8.22.0"
   }
 }

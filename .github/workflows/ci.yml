@@ -7,6 +7,23 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: personal_wiki
+          POSTGRES_PASSWORD: personal_wiki
+          POSTGRES_DB: personal_wiki
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgres://personal_wiki:personal_wiki@localhost:5432/personal_wiki
+      AUTH_SECRET: ci-secret
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -16,5 +33,7 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run build
+      - run: npm run db:migrate
+      - run: npm run db:create-user -- ci@example.com builder runs:read,runs:write,artifacts:read,deploy:preview
       - run: npm run inspect:agents
       - run: npm run demo:approval
