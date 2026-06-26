@@ -16,6 +16,15 @@ export interface LoadedAgent {
   definition: AgentDefinition;
   rootDir: string;
   instructions: string;
+  localTools: string[];
+  localSkills: string[];
+  localEvals: string[];
+  validationIssues: AgentValidationIssue[];
+}
+
+export interface AgentValidationIssue {
+  severity: "warning" | "error";
+  message: string;
 }
 
 export interface ToolDefinition {

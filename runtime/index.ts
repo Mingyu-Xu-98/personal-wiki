@@ -2,6 +2,7 @@ export * from "./types.js";
 export * from "./agent-loader.js";
 export * from "./trace-recorder.js";
 export * from "./tool-registry.js";
+export * from "./scoped-tools.js";
 export * from "./run-store.js";
 export * from "./approval-gate.js";
 export * from "./sandbox-runner.js";

@@ -1,11 +1,12 @@
 import type { BuildIntent, BuildVersion, HarnessRun } from "../domain/index.js";
 import type { LoadedAgent } from "./types.js";
 import { TraceRecorder } from "./trace-recorder.js";
-import { ToolRegistry } from "./tool-registry.js";
+import type { ToolRegistry } from "./tool-registry.js";
 import { RunStore } from "./run-store.js";
 import { ApprovalGate } from "./approval-gate.js";
 import { SandboxRunner } from "./sandbox-runner.js";
 import { createBuiltinTools } from "./builtin-tools.js";
+import { createScopedToolRegistry } from "./scoped-tools.js";
 
 export interface WorkflowResult {
   run: HarnessRun;
@@ -20,10 +21,10 @@ export async function runSiteBuildWorkflow(agent: LoadedAgent, intent: BuildInte
   const store = new RunStore(workspaceRoot);
   const approvalGate = new ApprovalGate();
   const sandbox = new SandboxRunner(workspaceRoot);
-  const toolRegistry = new ToolRegistry();
-  for (const tool of createBuiltinTools({ workspaceRoot, approvalGate, sandbox })) {
-    toolRegistry.register(tool);
-  }
+  const { registry: toolRegistry, skipped } = createScopedToolRegistry(
+    agent,
+    createBuiltinTools({ workspaceRoot, approvalGate, sandbox }),
+  );
 
   const run: HarnessRun = {
     id: crypto.randomUUID(),
@@ -35,7 +36,11 @@ export async function runSiteBuildWorkflow(agent: LoadedAgent, intent: BuildInte
       loadedEntityIds: [],
       loadedSourceRefs: [],
       visibleArtifacts: [],
-      notes: [`Loaded agent ${agent.definition.id}`],
+      notes: [
+        `Loaded agent ${agent.definition.id}`,
+        `Local tools: ${agent.localTools.join(", ") || "none"}`,
+        `Skipped tools: ${skipped.map((tool) => `${tool.name} (${tool.reason})`).join(", ") || "none"}`,
+      ],
     },
     toolTrace: [],
     versions: [],

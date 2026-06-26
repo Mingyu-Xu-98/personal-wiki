@@ -7,7 +7,8 @@
   "scripts": {
     "check": "tsc --noEmit",
     "build": "tsc",
-    "demo": "node dist/runtime/demo.js"
+    "demo": "npm run build && node dist/runtime/demo.js",
+    "inspect:agents": "npm run build && node dist/runtime/inspect-agents.js"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
