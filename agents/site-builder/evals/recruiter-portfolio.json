@@ -2,5 +2,5 @@
   "name": "recruiter portfolio smoke",
   "intent": "Build a technical portfolio from a personal wiki for recruiter review.",
   "expectedTraceSpans": ["ai.eve.turn", "ai.streamText", "ai.toolCall"],
-  "expectedArtifact": "versioned site artifact"
+  "expectedArtifact": "versioned html site artifact"
 }

@@ -81,6 +81,33 @@ export async function runSiteBuildWorkflow(agent: LoadedAgent, intent: BuildInte
     input: { intentId: intent.id },
   });
 
+  const htmlArtifact = [
+    "<!doctype html>",
+    "<html lang=\"en\">",
+    "<head>",
+    "  <meta charset=\"utf-8\" />",
+    "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />",
+    "  <title>Personal Wiki Portfolio</title>",
+    "  <style>",
+    "    body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f7f7f2; color: #202124; }",
+    "    main { max-width: 880px; margin: 0 auto; padding: 72px 24px; }",
+    "    h1 { font-size: 48px; line-height: 1; margin: 0 0 16px; }",
+    "    p { font-size: 18px; line-height: 1.6; max-width: 680px; }",
+    "    .pill { display: inline-block; border: 1px solid #202124; padding: 6px 10px; margin: 6px 6px 0 0; font-size: 13px; }",
+    "  </style>",
+    "</head>",
+    "<body>",
+    "  <main>",
+    `    <h1>${intent.goal}</h1>`,
+    `    <p>Audience: ${intent.audience}. Purpose: ${intent.purpose}. This static artifact was compiled by the durable harness workflow.</p>`,
+    "    <div>",
+    ...intent.constraints.map((constraint) => `      <span class=\"pill\">${escapeHtml(constraint)}</span>`),
+    "    </div>",
+    "  </main>",
+    "</body>",
+    "</html>",
+  ].join("\n");
+
   const artifactMarkdown = [
     "# Personal Wiki Portfolio",
     "",
@@ -105,6 +132,17 @@ export async function runSiteBuildWorkflow(agent: LoadedAgent, intent: BuildInte
     input: {
       path: "site.md",
       content: artifactMarkdown,
+    },
+  });
+  await callTool({
+    recorder,
+    registry: toolRegistry,
+    run,
+    parentId: turn.id,
+    name: "write_site_file",
+    input: {
+      path: "index.html",
+      content: htmlArtifact,
     },
   });
   await persist(store, run, recorder, approvalGate);
@@ -250,7 +288,7 @@ async function validateAndVersion(input: {
     parentId: input.parentId,
     name: "run_build",
     input: {
-      requiredFiles: ["site.md"],
+      requiredFiles: ["site.md", "index.html"],
     },
   });
 
@@ -275,4 +313,13 @@ async function validateAndVersion(input: {
   input.run.status = validationStatus === "passed" ? "completed" : "failed";
   input.run.updatedAt = new Date().toISOString();
   await persist(input.store, input.run, input.recorder, input.approvalGate);
+}
+
+function escapeHtml(input: string): string {
+  return input
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("\"", "&quot;")
+    .replaceAll("'", "&#39;");
 }

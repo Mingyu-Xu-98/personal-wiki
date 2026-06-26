@@ -36,6 +36,7 @@ workspace/runs/<run-id>/
   approvals.json
 
 workspace/artifacts/<run-id>/
+  index.html
   site.md
 ```
 
