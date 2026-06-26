@@ -1,38 +1,33 @@
 # Architecture
 
-Personal Wiki Harness is not a generic AI website builder. It is a compilation system where a personal wiki is the durable source of meaning and a public or private site is a versioned build artifact.
+Personal Wiki is built around four layers:
 
-## Core Thesis
+```text
+workspace/      durable files: raw sources, wiki pages, runs, artifacts
+domain/         typed wiki, build, and site models
+runtime/        agent loading, workflow execution, tracing, approvals, sandbox contracts
+agents/         file-system-first agent capability directories
+```
 
-The model is only one component. Everything around it is harness:
+## Agent as Directory
 
-- durable state and run history
-- wiki and source access
-- context selection
-- tool registration and authorization
-- planning and execution
-- verification
-- version records
-- hooks and middleware
+Each agent is a directory with local identity, instructions, tools, skills, subagents, and evals. The harness loads the directory and decides what the agent can see and do during a workflow step.
 
-The harness should make long-running site construction inspectable, repeatable, and correctable.
+## Harness as Control Plane
 
-## Layers
+The harness owns:
 
-1. Raw sources are immutable evidence. They may be ingested, cited, and linked, but never rewritten by the harness.
-2. The wiki is the persistent semantic layer. It is maintained incrementally through entity pages, topic pages, source summaries, indexes, logs, relations, and lint issues.
-3. The harness runtime is the command layer. It converts a user intent into context, a plan, tool calls, verification, and a build version.
-4. The system meta-skill layer stores product-level procedures learned during build testing.
-5. The model routing layer assigns strong, balanced, small, or retrieval tiers to runtime roles.
-6. The site compiler converts wiki-backed meaning into a content model and site plan.
-7. Studio will eventually provide a UI over the same primitives, but it is not the first dependency.
+- durable workflow state
+- scoped tool access
+- context ledger
+- trace spans
+- approvals
+- sandbox execution contracts
+- validation
+- build versions
 
-## Package Boundaries
+Agents do focused work inside those boundaries.
 
-- `wiki-core` owns wiki data shapes and wiki maintenance records.
-- `agent-runtime` owns model messages, tool definitions, tool calls, and execution boundaries.
-- `meta-skill-core` owns system-level reusable procedures and promotion policy.
-- `site-compiler` owns the intermediate site representation.
-- `harness-core` coordinates the other packages without knowing UI details.
+## Website as Artifact
 
-The first implementation keeps persistence in memory so the contracts can settle before choosing storage.
+The website is a compiled artifact derived from the personal wiki under a specific build intent. It is not the source of truth.

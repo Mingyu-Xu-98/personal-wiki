@@ -1,25 +1,16 @@
 # Model Routing
 
-The harness should use model tiers instead of binding core logic to one provider or one model name.
+Agents declare a symbolic model route instead of a hard-coded provider:
 
-## Principle
+```ts
+model: "router/code"
+```
 
-Spend strong-model reasoning where mistakes shape the whole run. Use cheaper tiers where work is bounded, checkable, or high-volume.
+Initial routes:
 
-## Default Routing
+- `router/knowledge`: source ingestion and wiki maintenance.
+- `router/reasoning`: intent, content compilation, editing, QA.
+- `router/design`: site planning and visual direction.
+- `router/code`: artifact generation.
 
-- `commander`: strong tier
-- `planner`: strong tier
-- `reflection`: strong tier
-- `system-skill-promotion`: strong tier
-- `coder`: balanced tier
-- `wiki-maintainer`: balanced tier
-- `site-assistant`: small tier
-- `summarizer`: small tier
-- `search`: embedding or retrieval tier
-
-## Why This Matters
-
-The commander decides intent, context, tools, and recovery. That role should use the best available reasoning. Website-internal AI calls are usually narrower: answer a visitor question, summarize selected wiki content, or help navigate a compiled site. Those should default to smaller, lower-cost models with strict context boundaries.
-
-The routing decision is part of the run ledger so later reflection can tell whether the chosen tier was sufficient.
+The runtime will later map these routes to concrete providers, costs, latency classes, and fallback chains.

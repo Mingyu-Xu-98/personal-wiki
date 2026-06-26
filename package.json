@@ -1,21 +1,16 @@
 {
-  "name": "personal-wiki-harness",
+  "name": "personal-wiki",
   "version": "0.1.0",
   "private": true,
-  "description": "A harness runtime for compiling a personal wiki into versioned site artifacts.",
+  "description": "An eve-style personal wiki harness for compiling living knowledge into versioned websites.",
   "type": "module",
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ],
   "scripts": {
-    "check": "npm run check:packages && npm run check -w @personal-wiki-harness/studio",
-    "check:packages": "tsc -p tsconfig.packages.json --pretty false",
-    "demo": "node packages/harness-core/src/demo.ts",
-    "dev": "npm run dev -w @personal-wiki-harness/studio",
-    "build": "npm run build -w @personal-wiki-harness/studio"
+    "check": "tsc --noEmit",
+    "build": "tsc",
+    "demo": "node dist/runtime/demo.js"
   },
   "devDependencies": {
-    "typescript": "^6.0.3"
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3"
   }
 }

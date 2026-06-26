@@ -1,31 +1,26 @@
 # Build State Machine
 
-Harness runs move through a small explicit state machine.
+The build workflow is durable and resumable.
 
-```mermaid
-stateDiagram-v2
-  [*] --> created
-  created --> planning
-  planning --> executing
-  executing --> verifying
-  verifying --> reflecting
-  reflecting --> versioned
-  planning --> failed
-  executing --> failed
-  verifying --> failed
-  reflecting --> failed
-  versioned --> [*]
-  failed --> [*]
+```text
+analyze_intent
+  -> curate_wiki
+  -> compile_content
+  -> plan_site
+  -> build_site
+  -> validate
+  -> approval
+  -> complete
 ```
 
-## States
+Failure can enter `repair` and resume from the step that owns the failed artifact.
 
-- `created`: intent has been captured.
-- `planning`: context is assembled and a plan is produced.
-- `executing`: plan steps are being applied.
-- `verifying`: outputs are checked.
-- `reflecting`: run quality, model routing, and possible system-skill evidence are recorded.
-- `versioned`: a build version exists.
-- `failed`: the run stopped with a recorded error.
+Every state transition should write:
 
-The state machine is intentionally small. Richness belongs in the ledger, plan, tool records, and verification details.
+- current step
+- context ledger update
+- tool trace update
+- trace span
+- optional build version
+
+The first implementation phase only runs `build_site -> complete` with deterministic output.

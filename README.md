@@ -1,35 +1,29 @@
-# Personal Wiki Harness
+# Personal Wiki
 
-Personal Wiki Harness treats a personal wiki as the source of meaning and a personal website as a compiled artifact.
+Personal Wiki is an eve-style harness for compiling a living personal wiki into versioned website artifacts.
 
-The harness is the coordinating runtime around the model. It owns intent capture, durable context, tool access, planning, execution, verification, and versioning. The first milestone is deliberately small: stable domain types, architecture notes, and a minimal orchestrator that can turn a build intent into a recorded run.
+The project treats an agent as a directory and a website build as a durable workflow. The personal wiki is the long-term memory. The harness is the control plane that manages intent, context, tools, approvals, traces, retries, validation, and versions.
 
-## Workspace
+## Shape
 
-- `docs/` captures the architecture and operating model.
-- `packages/wiki-core/` defines source, wiki, relation, event, and lint primitives.
-- `packages/harness-core/` defines the orchestration runtime.
-- `packages/agent-runtime/` defines model and tool boundary contracts.
-- `packages/meta-skill-core/` defines system-level reusable procedures and promotion policy.
-- `packages/site-compiler/` defines content and site planning primitives.
-- `apps/studio/` is reserved for the future UI.
-
-## First Local Check
-
-```sh
-npm run demo
+```text
+agents/                 file-system-first agent definitions
+runtime/                durable workflow, tracing, tools, approvals, sandbox contracts
+domain/                 wiki, build, and site domain models
+workspace/              local raw sources, wiki pages, runs, and artifacts
+docs/                   architecture and operating model
 ```
 
-The demo runs the minimal harness without calling an external model or adopting any older project framework.
-
-## Studio Preview
+## First Demo
 
 ```sh
 npm install
-npm run dev
+npm run check
+npm run demo
 ```
 
-Open `http://localhost:3000`. The local seed admin account is:
+The demo loads the `site-builder` agent from the file system, creates a durable run, records trace spans, and writes a site build version without calling an external model.
 
-- email: `admin@personal.wiki`
-- password: `admin123`
+## Principle
+
+Agents are workers. The harness is the project manager.
