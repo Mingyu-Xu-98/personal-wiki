@@ -20,6 +20,7 @@ export interface ToolCallRecord {
   name: string;
   input: unknown;
   outputPreview: string;
+  outputPath?: string;
   startedAt: string;
   finishedAt: string;
   status: "ok" | "error";
@@ -33,6 +34,7 @@ export interface BuildVersion {
   summary: string;
   usedEntityIds: string[];
   usedSourceIds: string[];
+  validationStatus: "pending" | "passed" | "failed";
   createdAt: string;
 }
 
@@ -57,4 +59,10 @@ export interface HarnessRun {
   versions: BuildVersion[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface PersistedRunBundle {
+  run: HarnessRun;
+  trace: unknown[];
+  approvals: unknown[];
 }

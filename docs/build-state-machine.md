@@ -23,4 +23,13 @@ Every state transition should write:
 - trace span
 - optional build version
 
-The first implementation phase only runs `build_site -> complete` with deterministic output.
+The current local workflow runs:
+
+```text
+build_site
+  -> approval
+  -> validate
+  -> complete
+```
+
+It uses deterministic output rather than a real model call, but it already records run state, trace spans, tool calls, approval state, sandbox validation, and build versions.

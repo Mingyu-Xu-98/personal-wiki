@@ -40,7 +40,9 @@ export interface ApprovalRequest {
   id: string;
   runId: string;
   reason: string;
+  artifactPath?: string;
   requestedAt: string;
+  resolvedAt?: string;
   status: "pending" | "approved" | "rejected";
 }
 
@@ -48,4 +50,5 @@ export interface SandboxResult {
   status: "ok" | "error";
   logs: string[];
   artifactPath?: string;
+  checkedFiles: string[];
 }

@@ -118,6 +118,9 @@ It should provide:
 - A workflow runner that records spans and versions.
 - A `site-builder` example agent.
 - A local demo proving the harness shape.
+- Durable run files under `workspace/runs`.
+- Isolated artifact files under `workspace/artifacts`.
+- Agent-local eval cases.
 
 ## Later Phases
 

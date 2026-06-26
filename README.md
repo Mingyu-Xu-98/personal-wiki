@@ -22,7 +22,19 @@ npm run check
 npm run demo
 ```
 
-The demo loads the `site-builder` agent from the file system, creates a durable run, records trace spans, and writes a site build version without calling an external model.
+The demo loads the `site-builder` agent from the file system, creates a durable run, records trace spans, calls scoped tools, creates an approval checkpoint, validates an artifact through the sandbox contract, writes a build version, and runs the agent eval case.
+
+The generated run state is written under:
+
+```text
+workspace/runs/<run-id>/
+  run.json
+  trace.json
+  approvals.json
+
+workspace/artifacts/<run-id>/
+  site.md
+```
 
 ## Principle
 
