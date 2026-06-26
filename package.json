@@ -13,7 +13,8 @@
     "inspect:runs": "npm run build && node dist/runtime/inspect-runs.js",
     "serve": "npm run build && node dist/runtime/server.js",
     "db:migrate": "npm run build && node dist/runtime/db-admin.js migrate",
-    "db:create-user": "npm run build && node dist/runtime/db-admin.js create-user"
+    "db:create-user": "npm run build && node dist/runtime/db-admin.js create-user",
+    "db:set-password": "npm run build && node dist/runtime/db-admin.js set-password"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

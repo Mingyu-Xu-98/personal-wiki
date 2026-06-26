@@ -1,9 +1,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createHash, randomBytes, randomUUID } from "node:crypto";
+import { createHash, randomBytes, randomUUID, scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
+import { promisify } from "node:util";
 import { Pool } from "pg";
 import type { HarnessRun } from "../domain/index.js";
 import type { Principal } from "./security/auth.js";
+
+const scrypt = promisify(scryptCallback);
 
 export interface RunSummary {
   id: string;
@@ -63,11 +66,76 @@ export class PostgresDatabase {
     };
   }
 
+  async verifySessionToken(rawToken: string): Promise<Principal | null> {
+    const tokenHash = hashSessionToken(rawToken);
+    const result = await this.pool.query<{
+      user_id: string;
+      email: string;
+      role: Principal["role"];
+    }>(`
+      SELECT u.id AS user_id, u.email, u.role
+      FROM sessions s
+      JOIN users u ON u.id = s.user_id
+      WHERE s.token_hash = $1
+        AND s.revoked_at IS NULL
+        AND s.expires_at > now()
+        AND u.status = 'active'
+      LIMIT 1
+    `, [tokenHash]);
+    const row = result.rows[0];
+    if (!row) return null;
+    return {
+      userId: row.user_id,
+      email: row.email,
+      role: row.role,
+      scopes: scopesForRole(row.role),
+    };
+  }
+
+  async authenticatePassword(email: string, password: string): Promise<Principal | null> {
+    const result = await this.pool.query<{
+      user_id: string;
+      email: string;
+      role: Principal["role"];
+      password_hash: string;
+    }>(`
+      SELECT u.id AS user_id, u.email, u.role, pc.password_hash
+      FROM users u
+      JOIN password_credentials pc ON pc.user_id = u.id
+      WHERE lower(u.email) = lower($1)
+        AND u.status = 'active'
+      LIMIT 1
+    `, [email]);
+    const row = result.rows[0];
+    if (!row || !await verifyPassword(password, row.password_hash)) return null;
+    return {
+      userId: row.user_id,
+      email: row.email,
+      role: row.role,
+      scopes: scopesForRole(row.role),
+    };
+  }
+
+  async createSession(principal: Principal, ttlDays = 14): Promise<{ token: string; expiresAt: Date }> {
+    const token = generateSessionToken();
+    const expiresAt = new Date(Date.now() + ttlDays * 24 * 60 * 60 * 1000);
+    await this.pool.query(`
+      INSERT INTO sessions (id, user_id, token_hash, expires_at)
+      VALUES ($1, $2, $3, $4)
+    `, [randomUUID(), principal.userId, hashSessionToken(token), expiresAt]);
+    return { token, expiresAt };
+  }
+
+  async revokeSession(rawToken: string): Promise<void> {
+    await this.pool.query("UPDATE sessions SET revoked_at = now() WHERE token_hash = $1", [hashSessionToken(rawToken)]);
+  }
+
   async createUserApiKey(input: {
     email: string;
     role: Principal["role"];
     scopes: string[];
     name?: string;
+    password?: string;
   }): Promise<{ userId: string; apiKey: string }> {
     const userId = randomUUID();
     const apiKey = generateApiKey();
@@ -84,7 +152,26 @@ export class PostgresDatabase {
       INSERT INTO api_keys (id, user_id, name, key_hash, scopes)
       VALUES ($1, $2, $3, $4, $5)
     `, [randomUUID(), userResult.rows[0].id, input.name ?? "default", hashApiKey(apiKey), input.scopes]);
+    if (input.password) await this.setUserPassword(input.email, input.password);
     return { userId: userResult.rows[0].id, apiKey };
+  }
+
+  async setUserPassword(email: string, password: string): Promise<string> {
+    if (password.length < 8) throw new Error("Password must be at least 8 characters.");
+    const userResult = await this.pool.query<{ id: string }>(
+      "SELECT id FROM users WHERE lower(email) = lower($1) AND status = 'active'",
+      [email],
+    );
+    const userId = userResult.rows[0]?.id;
+    if (!userId) throw new Error(`No active user found for ${email}.`);
+    await this.pool.query(`
+      INSERT INTO password_credentials (user_id, password_hash, updated_at)
+      VALUES ($1, $2, now())
+      ON CONFLICT (user_id) DO UPDATE SET
+        password_hash = EXCLUDED.password_hash,
+        updated_at = now()
+    `, [userId, await hashPassword(password)]);
+    return userId;
   }
 
   async getRunOwner(runId: string): Promise<string | null> {
@@ -180,6 +267,35 @@ export function hashApiKey(rawKey: string): string {
 
 export function generateApiKey(): string {
   return `pwiki_${randomBytes(32).toString("base64url")}`;
+}
+
+export function generateSessionToken(): string {
+  return `pws_${randomBytes(32).toString("base64url")}`;
+}
+
+export function hashSessionToken(rawToken: string): string {
+  const secret = process.env.AUTH_SECRET ?? "";
+  return createHash("sha256").update(`${secret}:session:${rawToken}`).digest("hex");
+}
+
+export async function hashPassword(password: string): Promise<string> {
+  const salt = randomBytes(16).toString("base64url");
+  const derived = await scrypt(password, salt, 64) as Buffer;
+  return `scrypt:${salt}:${derived.toString("base64url")}`;
+}
+
+export async function verifyPassword(password: string, stored: string): Promise<boolean> {
+  const [scheme, salt, expected] = stored.split(":");
+  if (scheme !== "scrypt" || !salt || !expected) return false;
+  const expectedBuffer = Buffer.from(expected, "base64url");
+  const actual = await scrypt(password, salt, expectedBuffer.length) as Buffer;
+  return actual.length === expectedBuffer.length && timingSafeEqual(actual, expectedBuffer);
+}
+
+function scopesForRole(role: Principal["role"]): string[] {
+  if (role === "admin") return ["*"];
+  if (role === "builder") return ["runs:read", "runs:write", "artifacts:read", "deploy:preview"];
+  return ["runs:read", "artifacts:read"];
 }
 
 function migrationLockId(): number {
