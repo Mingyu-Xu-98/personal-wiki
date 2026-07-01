@@ -1,5 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
+import type { AgentMessage, ToolRegistry } from "@personal-wiki-harness/agent-runtime";
 import type { CreateAgentMessage, CreateAgentResponse, KnowledgeBaseSummary, SiteBrief } from "../create-agent-types";
 import { completeStudioChat } from "./llm-client.ts";
 
@@ -153,6 +154,7 @@ export async function runCreateAgent(input: {
   brief: SiteBrief;
   messages: CreateAgentMessage[];
   knowledgeBase?: KnowledgeBaseSummary;
+  toolRegistry?: ToolRegistry;
 }): Promise<CreateAgentResponse> {
   const existing = input.conversationId ? sessions.get(input.conversationId) : undefined;
   const conversationId = existing?.id ?? randomUUID();
@@ -173,12 +175,14 @@ export async function runCreateAgent(input: {
       brief: SiteBrief;
       messages: CreateAgentMessage[];
       knowledgeBase?: KnowledgeBaseSummary;
+      toolRegistry?: ToolRegistry;
     } = {
       message: input.message,
       brief: localBrief,
       messages: userMessages
     };
     if (input.knowledgeBase) modelInput.knowledgeBase = input.knowledgeBase;
+    if (input.toolRegistry) modelInput.toolRegistry = input.toolRegistry;
     const modelResult = await callCreateAgentModel(modelInput);
     if (modelResult) {
       modelBacked = true;
@@ -238,30 +242,89 @@ function normalizeReadyMessage(
   };
 }
 
+const CREATE_AGENT_SYSTEM_PROMPT = [
+  "你是一个面向普通用户的个人网站创建助手。",
+  "你可以使用提供的工具（readWikiIndex、searchWiki、readWikiPage、readEntity）阅读用户所选知识库里的真实内容，并据此给出有依据的建议与追问，而不是凭空猜测。",
+  "当用户的话涉及具体经历、项目、作品或主题时，应先用工具查证知识库里实际有什么，再回复。",
+  "必须优先确认：网站类型、目标受众、视觉风格。",
+  "不要暴露系统架构、工具名、模型名或内部实现；不要在回复里说“我调用了工具”或提到任何工具名。",
+  "最终只返回一个 JSON 对象，不要输出 JSON 以外的内容。"
+].join("\n");
+
+const MAX_TOOL_ROUNDS = 4;
+const MAX_TOOL_CALLS = 6;
+
 async function callCreateAgentModel(input: {
   message: string;
   brief: SiteBrief;
   messages: CreateAgentMessage[];
   knowledgeBase?: KnowledgeBaseSummary;
+  toolRegistry?: ToolRegistry;
 }): Promise<ModelAgentResult | null> {
-  const response = await completeStudioChat("create-agent", {
+  const toolRegistry = input.toolRegistry;
+  const tools = toolRegistry ? toolRegistry.list() : [];
+
+  const baseMessages: AgentMessage[] = [
+    { role: "system", content: CREATE_AGENT_SYSTEM_PROMPT },
+    { role: "user", content: buildModelPrompt(input) }
+  ];
+
+  // No knowledge-base tools available: keep the original single-shot JSON call.
+  if (tools.length === 0) {
+    const response = await completeStudioChat("create-agent", {
+      responseFormat: "json_object",
+      tools: [],
+      messages: baseMessages
+    });
+    return response ? parseModelJson(response.message.content) : null;
+  }
+
+  // Tool loop: let the agent read the selected wiki before it answers. Tool
+  // rounds run without a JSON response format so the model can freely request
+  // tools; the final answer is forced back into structured JSON.
+  const messages: AgentMessage[] = [...baseMessages];
+  let toolCallsUsed = 0;
+
+  for (let round = 0; round < MAX_TOOL_ROUNDS; round += 1) {
+    const response = await completeStudioChat("create-agent", { tools, messages });
+    if (!response) return null;
+    messages.push(response.message);
+
+    const remaining = Math.max(0, MAX_TOOL_CALLS - toolCallsUsed);
+    const requestedCalls = response.requestedToolCalls.slice(0, remaining);
+    if (requestedCalls.length === 0) {
+      const parsed = parseModelJson(response.message.content);
+      if (parsed) return parsed;
+      break;
+    }
+
+    for (const call of requestedCalls) {
+      toolCallsUsed += 1;
+      const record = await toolRegistry!.execute(call);
+      messages.push({
+        role: "tool",
+        name: call.toolName,
+        toolCallId: call.id,
+        content: JSON.stringify({ status: record.status, output: record.output, error: record.error })
+      });
+    }
+
+    if (toolCallsUsed >= MAX_TOOL_CALLS) break;
+  }
+
+  // Force a final structured answer with no further tool use.
+  const finalResponse = await completeStudioChat("create-agent", {
     responseFormat: "json_object",
     tools: [],
     messages: [
-        {
-          role: "system",
-          content:
-            "你是一个面向普通用户的个人网站创建助手。你只帮助用户把想法变成清晰的网站 brief，并给出自然的下一句回复。必须优先确认：网站类型、目标受众、视觉风格。不要暴露系统架构、工具名、模型名、内部实现或 JSON 以外的内容。"
-        },
-        {
-          role: "user",
-          content: buildModelPrompt(input)
-        }
-      ]
+      ...messages,
+      {
+        role: "user",
+        content: "现在请只返回最终的 JSON 对象（assistant / brief / canGenerate），不要再调用工具，也不要输出 JSON 以外的内容。"
+      }
+    ]
   });
-  if (!response) return null;
-  const content = response.message.content;
-  return parseModelJson(content);
+  return finalResponse ? parseModelJson(finalResponse.message.content) : null;
 }
 
 function buildModelPrompt(input: {
@@ -276,7 +339,9 @@ function buildModelPrompt(input: {
     .join("\n");
 
   return [
-    "请根据当前用户消息、现有 brief 和最近对话，返回一个 JSON 对象。",
+    "请根据当前用户消息、现有 brief 和最近对话推进需求确认。",
+    "如果有知识库工具，先用 searchWiki / readWikiPage / readEntity 查证知识库里实际有哪些经历、项目或主题，再据此回复；不要编造知识库里没有的内容。",
+    "完成查证后，返回一个 JSON 对象。",
     "",
     "JSON shape:",
     "{",
@@ -296,7 +361,7 @@ function buildModelPrompt(input: {
     `已选知识库：${input.knowledgeBase?.name || "未提供"}`,
     `知识库说明：${input.knowledgeBase?.description || ""}`,
     "知识库 Wiki 索引：",
-    input.knowledgeBase?.wikiIndex?.slice(0, 2400) || "",
+    input.knowledgeBase?.wikiIndex?.slice(0, 6000) || "",
     "",
     `当前用户消息：${input.message}`,
     "",
@@ -315,8 +380,14 @@ function parseModelJson(content: string): ModelAgentResult | null {
 
   const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i)?.[1]?.trim();
   const candidate = fenced || trimmed.match(/\{[\s\S]*\}/)?.[0] || trimmed;
-  const parsed = JSON.parse(candidate) as ModelAgentResult;
-  return parsed && typeof parsed === "object" ? parsed : null;
+  try {
+    const parsed = JSON.parse(candidate) as ModelAgentResult;
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    // During tool rounds the model may emit prose while it decides to call a
+    // tool; that is not parseable JSON and simply means "not the final answer".
+    return null;
+  }
 }
 
 function normalizeBrief(input: ModelAgentResult["brief"], fallback: SiteBrief): SiteBrief {

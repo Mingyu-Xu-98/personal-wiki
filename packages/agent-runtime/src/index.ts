@@ -201,6 +201,10 @@ export type OpenAICompatibleAgentRuntimeOptions = {
   model: string;
   fetchImplementation?: typeof fetch;
   extraHeaders?: Record<string, string>;
+  maxOutputTokens?: number;
+  // Extra provider-specific body fields merged into the request (e.g. GLM's
+  // { thinking: { type: "disabled" } } to turn off reasoning).
+  extraBody?: Record<string, unknown>;
 };
 
 export type OpenAIResponsesAgentRuntimeOptions = OpenAICompatibleAgentRuntimeOptions & {
@@ -513,6 +517,8 @@ export const createOpenAICompatibleAgentRuntime = (
     };
     if (request.tools.length > 0) body.tools = request.tools.map(toOpenAITool);
     if (request.responseFormat === "json_object") body.response_format = { type: "json_object" };
+    if (options.maxOutputTokens !== undefined) body.max_tokens = options.maxOutputTokens;
+    if (options.extraBody) Object.assign(body, options.extraBody);
 
     const response = await fetchImplementation(`${options.baseUrl.replace(/\/+$/, "")}/chat/completions`, {
       method: "POST",
@@ -597,6 +603,163 @@ export const createOpenAIResponsesAgentRuntime = (
   }
 });
 
+export type AnthropicAgentRuntimeOptions = OpenAICompatibleAgentRuntimeOptions & {
+  maxOutputTokens?: number;
+  anthropicVersion?: string;
+};
+
+export type AnthropicSubAgentExecutorOptions = AnthropicAgentRuntimeOptions &
+  Omit<ModelBackedSubAgentExecutorOptions, "agentRuntime">;
+
+export const createAnthropicSubAgentExecutor = (
+  options: AnthropicSubAgentExecutorOptions
+): SubAgentExecutor => {
+  const { toolRegistry, clock, maxToolRounds, ...runtimeOptions } = options;
+  const executorOptions: ModelBackedSubAgentExecutorOptions = {
+    agentRuntime: createAnthropicAgentRuntime(runtimeOptions)
+  };
+  if (toolRegistry) executorOptions.toolRegistry = toolRegistry;
+  if (clock) executorOptions.clock = clock;
+  if (maxToolRounds !== undefined) executorOptions.maxToolRounds = maxToolRounds;
+  return createModelBackedSubAgentExecutor(executorOptions);
+};
+
+export const createAnthropicAgentRuntime = (
+  options: AnthropicAgentRuntimeOptions
+): AgentRuntime => ({
+  async complete(request: ModelRequest): Promise<ModelResponse> {
+    const fetchImplementation = options.fetchImplementation ?? fetch;
+    const { system, messages } = toAnthropicMessages(request.messages);
+    const body: Record<string, unknown> = {
+      model: options.model,
+      max_tokens: options.maxOutputTokens ?? 4096,
+      messages
+    };
+    if (system) body.system = system;
+    if (request.tools.length > 0) body.tools = request.tools.map(toAnthropicTool);
+
+    const response = await fetchImplementation(`${options.baseUrl.replace(/\/+$/, "")}/v1/messages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": options.apiKey,
+        "anthropic-version": options.anthropicVersion ?? "2023-06-01",
+        ...(options.extraHeaders ?? {})
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+      const text = await response.text().catch(() => "");
+      throw new Error(`Anthropic model request failed with HTTP ${response.status}: ${text.slice(0, 240)}`);
+    }
+
+    const data = (await response.json()) as AnthropicMessageResponse;
+    const requestedToolCalls = readAnthropicToolCalls(data);
+
+    return {
+      message: {
+        role: "assistant",
+        content: readAnthropicText(data),
+        toolCalls: requestedToolCalls
+      },
+      requestedToolCalls
+    };
+  }
+});
+
+type AnthropicMessageResponse = {
+  content?: Array<{ type?: string; text?: string; id?: string; name?: string; input?: unknown }>;
+};
+
+function toAnthropicTool(tool: Omit<ToolDefinition, "execute">): Record<string, unknown> {
+  return {
+    name: tool.name,
+    description: tool.description,
+    input_schema: tool.inputSchema
+  };
+}
+
+function toAnthropicMessages(messages: AgentMessage[]): {
+  system?: string;
+  messages: Array<Record<string, unknown>>;
+} {
+  const systemParts: string[] = [];
+  const out: Array<Record<string, unknown>> = [];
+
+  const appendToolResult = (message: AgentMessage) => {
+    const block = {
+      type: "tool_result",
+      tool_use_id: message.toolCallId ?? message.name ?? "",
+      content: message.content
+    };
+    const last = out[out.length - 1];
+    if (last && last.role === "user" && Array.isArray(last.content) && (last.content as unknown[]).every(isToolResultBlock)) {
+      (last.content as unknown[]).push(block);
+    } else {
+      out.push({ role: "user", content: [block] });
+    }
+  };
+
+  for (const message of messages) {
+    if (message.role === "system") {
+      if (message.content) systemParts.push(message.content);
+      continue;
+    }
+    if (message.role === "tool") {
+      appendToolResult(message);
+      continue;
+    }
+    if (message.role === "assistant") {
+      const content: Array<Record<string, unknown>> = [];
+      if (message.content) content.push({ type: "text", text: message.content });
+      for (const toolCall of message.toolCalls ?? []) {
+        content.push({
+          type: "tool_use",
+          id: toolCall.id,
+          name: toolCall.toolName,
+          input: toolCall.input ?? {}
+        });
+      }
+      out.push({ role: "assistant", content: content.length ? content : [{ type: "text", text: " " }] });
+      continue;
+    }
+    out.push({ role: "user", content: message.content });
+  }
+
+  const result: { system?: string; messages: Array<Record<string, unknown>> } = { messages: out };
+  if (systemParts.length) result.system = systemParts.join("\n\n");
+  return result;
+}
+
+function isToolResultBlock(value: unknown): boolean {
+  return isRecord(value) && value.type === "tool_result";
+}
+
+function readAnthropicText(data: AnthropicMessageResponse): string {
+  if (!Array.isArray(data.content)) return "";
+  return data.content
+    .filter((block) => block.type === "text" && typeof block.text === "string")
+    .map((block) => block.text as string)
+    .join("");
+}
+
+function readAnthropicToolCalls(data: AnthropicMessageResponse): RequestedToolCall[] {
+  if (!Array.isArray(data.content)) return [];
+  return data.content.flatMap((block, index) => {
+    if (block.type !== "tool_use") return [];
+    const name = typeof block.name === "string" ? block.name : "";
+    if (!name) return [];
+    return [
+      {
+        id: typeof block.id === "string" ? block.id : `anthropic_tool_${index + 1}`,
+        toolName: name,
+        input: isRecord(block.input) ? block.input : block.input ?? {}
+      }
+    ];
+  });
+}
+
 export const executeModelBackedSubAgentTrace = async (
   trace: SubAgentTrace,
   options: ModelBackedSubAgentExecutorOptions
@@ -615,6 +778,12 @@ export const executeModelBackedSubAgentTrace = async (
   let finalMessage: AgentMessage | undefined;
 
   try {
+    // True when the loop ends while the model still wanted to call tools (ran
+    // out of rounds or tool-call budget). In that case its last message is
+    // usually narration ("I will now produce the content model...") rather than
+    // the final structured output, so we must solicit one more answer.
+    let needsFinalAnswer = false;
+
     for (let round = 0; round < maxToolRounds; round += 1) {
       const response = await options.agentRuntime.complete({
         messages,
@@ -623,11 +792,18 @@ export const executeModelBackedSubAgentTrace = async (
       finalMessage = response.message;
       messages.push(response.message);
 
-      if (response.requestedToolCalls.length === 0) break;
+      if (response.requestedToolCalls.length === 0) {
+        needsFinalAnswer = false;
+        break;
+      }
 
       const remainingToolCalls = Math.max(0, trace.packet.budget.maxToolCalls - toolCalls.length);
       const requestedCalls = response.requestedToolCalls.slice(0, remainingToolCalls);
-      if (requestedCalls.length === 0) break;
+      if (requestedCalls.length === 0) {
+        // Tool-call budget exhausted but the model still wants tools.
+        needsFinalAnswer = true;
+        break;
+      }
 
       for (const call of requestedCalls) {
         const toolOptions: {
@@ -653,6 +829,22 @@ export const executeModelBackedSubAgentTrace = async (
           })
         });
       }
+
+      // Executed tools on this round; if it was the last allowed round the loop
+      // exits here without giving the model a turn to emit its final output.
+      needsFinalAnswer = true;
+    }
+
+    if (needsFinalAnswer) {
+      // Force a final turn with tools disabled so the model stops gathering and
+      // returns its structured result (e.g. the content-model artifact) instead
+      // of leaving the work as narration.
+      const finalResponse = await options.agentRuntime.complete({
+        messages,
+        tools: []
+      });
+      finalMessage = finalResponse.message;
+      messages.push(finalResponse.message);
     }
 
     const result = createSubAgentResultFromMessage({

@@ -8,6 +8,7 @@ process.env.PWH_WIKI_CURATOR_ENABLED = "true";
 process.env.PWH_WIKI_CURATOR_MODEL = "balanced-wiki";
 process.env.PWH_SITE_AGENTS_ENABLED = "true";
 process.env.PWH_SITE_PLANNER_MODEL = "strong-planner";
+process.env.PWH_SITE_BUILDER_MODEL = "strong-builder";
 
 process.env.PWH_ECONOMY_LLM_BASE_URL = "https://economy.example/v1";
 process.env.PWH_ECONOMY_LLM_API_KEY = "economy-key";
@@ -35,10 +36,12 @@ const plannerRoute = resolveStudioLlmRoute("site-planner");
 assert.equal(plannerRoute?.providerId, "primary");
 assert.equal(plannerRoute?.model, "strong-planner");
 
+// The website-building agent now prefers the strong primary model so it can
+// read the wiki and write a full site; economy is only a fallback.
 const builderRoute = resolveStudioLlmRoute("site-builder");
-assert.equal(builderRoute?.providerId, "economy");
-assert.equal(builderRoute?.model, "small-builder");
-assert.equal(builderRoute?.wireApi, "chat-completions");
+assert.equal(builderRoute?.providerId, "primary");
+assert.equal(builderRoute?.model, "strong-builder");
+assert.equal(builderRoute?.wireApi, "responses");
 
 const chatbotRoute = resolveStudioLlmRoute("site-chatbot");
 assert.equal(chatbotRoute?.providerId, "economy");

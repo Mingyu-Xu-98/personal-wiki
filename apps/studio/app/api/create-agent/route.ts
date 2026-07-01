@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "../../../lib/server/auth";
-import { getKnowledgeBaseContext, prepareStudioState, recordUsage } from "../../../lib/server/store";
+import {
+  createKnowledgeChatToolRegistry,
+  getKnowledgeBaseContext,
+  prepareStudioState,
+  recordUsage
+} from "../../../lib/server/store";
 import { runCreateAgent } from "../../../lib/server/create-agent";
 import type { CreateAgentMessage, SiteBrief } from "../../../lib/create-agent-types";
 
@@ -24,8 +29,9 @@ export async function POST(request: Request) {
   const messages = Array.isArray(body.messages) ? body.messages.filter(isMessage) : [];
   const knowledgeBaseId = typeof body.knowledgeBaseId === "string" ? body.knowledgeBaseId : undefined;
   const knowledgeBase = getKnowledgeBaseContext(user.id, knowledgeBaseId);
+  const toolRegistry = createKnowledgeChatToolRegistry(user.id, knowledgeBase.id);
 
-  const result = await runCreateAgent({ conversationId, message, brief, messages, knowledgeBase });
+  const result = await runCreateAgent({ conversationId, message, brief, messages, knowledgeBase, toolRegistry });
   await recordUsage(user.id, {
     kind: "llm",
     quantity: message.length + messages.reduce((sum: number, entry: CreateAgentMessage) => sum + entry.content.length, 0),

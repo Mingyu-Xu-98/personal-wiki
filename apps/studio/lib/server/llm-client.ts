@@ -1,9 +1,12 @@
 import {
+  createAnthropicAgentRuntime,
+  createAnthropicSubAgentExecutor,
   createOpenAICompatibleAgentRuntime,
   createOpenAICompatibleSubAgentExecutor,
   createOpenAIResponsesAgentRuntime,
   createOpenAIResponsesSubAgentExecutor,
   type AgentRuntime,
+  type AnthropicSubAgentExecutorOptions,
   type ModelRequest,
   type ModelResponse,
   type OpenAICompatibleSubAgentExecutorOptions,
@@ -27,7 +30,7 @@ export type StudioLlmCapability = "chat" | "json" | "tool-use" | "image";
 
 export type StudioLlmProviderId = "primary" | "economy" | "image";
 
-export type StudioLlmWireApi = "chat-completions" | "responses";
+export type StudioLlmWireApi = "chat-completions" | "responses" | "anthropic";
 
 export type StudioLlmRoute = {
   useCase: StudioLlmUseCase;
@@ -82,35 +85,53 @@ const readPositiveInt = (value: string | undefined, fallback: number) => {
 
 const timeoutForUseCase = (useCase: StudioLlmUseCase) => {
   if (useCase === "site-planner" || useCase === "site-builder") {
-    return readPositiveInt(process.env.PWH_SITE_AGENT_TIMEOUT_MS, readPositiveInt(process.env.PWH_LLM_TIMEOUT_MS, 20000));
+    return readPositiveInt(process.env.PWH_SITE_AGENT_TIMEOUT_MS, readPositiveInt(process.env.PWH_LLM_TIMEOUT_MS, 90000));
   }
   return readPositiveInt(process.env.PWH_LLM_TIMEOUT_MS, 20000);
 };
 
 const maxOutputTokensForUseCase = (useCase: StudioLlmUseCase) => {
-  if (useCase === "site-builder") return readPositiveInt(process.env.PWH_SITE_BUILDER_MAX_OUTPUT_TOKENS, 6000);
-  if (useCase === "site-planner") return readPositiveInt(process.env.PWH_SITE_PLANNER_MAX_OUTPUT_TOKENS, 3000);
+  if (useCase === "site-builder") return readPositiveInt(process.env.PWH_SITE_BUILDER_MAX_OUTPUT_TOKENS, 16000);
+  if (useCase === "site-planner") return readPositiveInt(process.env.PWH_SITE_PLANNER_MAX_OUTPUT_TOKENS, 4000);
   return readPositiveInt(process.env.PWH_LLM_MAX_OUTPUT_TOKENS, 800);
 };
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const retriesForUseCase = () => readPositiveInt(process.env.PWH_LLM_FETCH_RETRIES, 2);
+
+// Resilient fetch: a single transient network failure ("fetch failed", e.g. a
+// flaky proxy/VPN dropping a connection) should not kill a whole build, which
+// makes a dozen sequential model calls. We retry fast network errors a couple
+// of times with short backoff. We do NOT retry genuine timeouts — that would
+// just burn another full timeout window while the model is legitimately slow.
 const createTimeoutFetch =
-  (timeoutMs: number): typeof fetch =>
+  (timeoutMs: number, maxRetries: number = retriesForUseCase()): typeof fetch =>
   async (input, init) => {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-      return await fetch(input, {
-        ...init,
-        signal: controller.signal
-      });
-    } catch (error) {
-      if (controller.signal.aborted) {
-        throw new Error(`Model request timed out after ${timeoutMs}ms.`);
+    let lastError: unknown;
+    for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        return await fetch(input, {
+          ...init,
+          signal: controller.signal
+        });
+      } catch (error) {
+        if (controller.signal.aborted) {
+          throw new Error(`Model request timed out after ${timeoutMs}ms.`);
+        }
+        lastError = error;
+        if (attempt < maxRetries) {
+          await delay(400 * (attempt + 1));
+          continue;
+        }
+        throw error;
+      } finally {
+        clearTimeout(timer);
       }
-      throw error;
-    } finally {
-      clearTimeout(timer);
     }
+    throw lastError;
   };
 
 const createAgentRuntimeForRoute = (route: StudioLlmRoute, useCase: StudioLlmUseCase): AgentRuntime => {
@@ -120,13 +141,24 @@ const createAgentRuntimeForRoute = (route: StudioLlmRoute, useCase: StudioLlmUse
     model: route.model,
     fetchImplementation: createTimeoutFetch(timeoutForUseCase(useCase))
   };
+  if (route.wireApi === "anthropic") {
+    return createAnthropicAgentRuntime({
+      ...commonOptions,
+      maxOutputTokens: maxOutputTokensForUseCase(useCase)
+    });
+  }
   if (route.wireApi === "responses") {
     return createOpenAIResponsesAgentRuntime({
       ...commonOptions,
       maxOutputTokens: maxOutputTokensForUseCase(useCase)
     });
   }
-  return createOpenAICompatibleAgentRuntime(commonOptions);
+  const runtimeExtraBody = thinkingDisabledExtraBody();
+  return createOpenAICompatibleAgentRuntime({
+    ...commonOptions,
+    maxOutputTokens: maxOutputTokensForUseCase(useCase),
+    ...(runtimeExtraBody ? { extraBody: runtimeExtraBody } : {})
+  });
 };
 
 export const isStudioLlmUseCaseEnabled = (useCase: StudioLlmUseCase): boolean => {
@@ -243,6 +275,16 @@ export const createStudioSubAgentExecutor = (
     model: route.model,
     fetchImplementation: createTimeoutFetch(timeoutForUseCase(useCase))
   };
+  if (route.wireApi === "anthropic") {
+    const executorOptions: AnthropicSubAgentExecutorOptions = {
+      ...commonOptions,
+      maxOutputTokens: maxOutputTokensForUseCase(useCase)
+    };
+    if (options.toolRegistry) executorOptions.toolRegistry = options.toolRegistry;
+    if (options.maxToolRounds !== undefined) executorOptions.maxToolRounds = options.maxToolRounds;
+    return createAnthropicSubAgentExecutor(executorOptions);
+  }
+
   if (route.wireApi === "responses") {
     const executorOptions: OpenAIResponsesSubAgentExecutorOptions = {
       ...commonOptions,
@@ -253,11 +295,47 @@ export const createStudioSubAgentExecutor = (
     return createOpenAIResponsesSubAgentExecutor(executorOptions);
   }
 
-  const executorOptions: OpenAICompatibleSubAgentExecutorOptions = commonOptions;
+  const executorOptions: OpenAICompatibleSubAgentExecutorOptions = {
+    ...commonOptions,
+    maxOutputTokens: maxOutputTokensForUseCase(useCase)
+  };
+  const subAgentExtraBody = thinkingDisabledExtraBody();
+  if (subAgentExtraBody) executorOptions.extraBody = subAgentExtraBody;
   if (options.toolRegistry) executorOptions.toolRegistry = options.toolRegistry;
   if (options.maxToolRounds !== undefined) executorOptions.maxToolRounds = options.maxToolRounds;
   return createOpenAICompatibleSubAgentExecutor(executorOptions);
 };
+
+// Dedicated HTML-render call: primary route only (no economy fallback — economy
+// often can't serve the primary's model), with its own longer timeout and a
+// bounded max_tokens so a full page generation finishes instead of running
+// unbounded until it times out.
+export const completeStudioSiteHtml = async (request: ModelRequest): Promise<ModelResponse | undefined> => {
+  const route = resolveStudioLlmRoute("site-builder");
+  if (!route?.enabled) return undefined;
+  const timeoutMs = readPositiveInt(process.env.PWH_SITE_HTML_RENDER_TIMEOUT_MS, 180000);
+  const maxOutputTokens = readPositiveInt(process.env.PWH_SITE_HTML_RENDER_MAX_OUTPUT_TOKENS, 10000);
+  const common = {
+    baseUrl: route.baseUrl,
+    apiKey: route.apiKey,
+    model: route.model,
+    fetchImplementation: createTimeoutFetch(timeoutMs),
+    maxOutputTokens
+  };
+  // HTML rendering is pure generation, not reasoning. GLM otherwise burns the
+  // whole token budget on reasoning_content and emits no HTML, so turn thinking
+  // off for the chat-completions path (Zhipu GLM `thinking: {type:"disabled"}`).
+  const runtime =
+    route.wireApi === "anthropic"
+      ? createAnthropicAgentRuntime(common)
+      : route.wireApi === "responses"
+        ? createOpenAIResponsesAgentRuntime(common)
+        : createOpenAICompatibleAgentRuntime({ ...common, extraBody: { thinking: { type: "disabled" } } });
+  return runtime.complete(request);
+};
+
+const thinkingDisabledExtraBody = (): Record<string, unknown> | undefined =>
+  truthy(process.env.PWH_LLM_DISABLE_THINKING) ? { thinking: { type: "disabled" } } : undefined;
 
 export const getPublicStudioLlmRuntime = (): PublicStudioLlmRuntime => {
   const providers = readProviders();
@@ -325,6 +403,7 @@ const clean = (value: string | undefined): string | undefined => {
 
 const resolveWireApi = (configured: string | undefined, baseUrl: string | undefined): StudioLlmWireApi => {
   const normalized = configured?.trim().toLowerCase().replace(/_/g, "-");
+  if (normalized === "anthropic" || normalized === "claude" || normalized === "messages") return "anthropic";
   if (normalized === "responses" || normalized === "response") return "responses";
   if (
     normalized === "chat" ||
@@ -334,6 +413,7 @@ const resolveWireApi = (configured: string | undefined, baseUrl: string | undefi
   ) {
     return "chat-completions";
   }
+  if (baseUrl && /\/anthropic(\/|$)/i.test(baseUrl)) return "anthropic";
   if (baseUrl && /code\.memect\.cn/i.test(baseUrl)) return "responses";
   return "chat-completions";
 };
@@ -434,10 +514,10 @@ const routeSpecs: Record<
   },
   "site-builder": {
     label: "Builder Agent",
-    tier: "small",
-    providerPreference: ["economy", "primary"],
+    tier: "strong",
+    providerPreference: ["primary", "economy"],
     capabilities: ["chat", "json", "tool-use"],
-    reason: "Builder Agent creates the content model, design usage plan, site plan, and HTML artifact behind deterministic verification, so it can use a cheaper model when quality is acceptable."
+    reason: "Builder Agent is the core website-building agent: it reads the selected wiki through tools and writes the content model, design usage plan, site plan, and full HTML. This is where intelligence matters most, so it uses the strong primary model first and only falls back to the economy model when the primary route is unavailable."
   },
   "site-chatbot": {
     label: "In-site Chatbot",

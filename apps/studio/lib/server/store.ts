@@ -5,11 +5,13 @@ import {
   createContextPacket,
   createDryRunSubAgentExecutor,
   createToolRegistry,
+  type AgentMessage,
   type ContextPacketInput,
   type SubAgentArtifact,
   type SubAgentExecutor,
   type SubAgentTrace,
-  type ToolDefinition
+  type ToolDefinition,
+  type ToolExecutionRecord
 } from "@personal-wiki-harness/agent-runtime";
 import {
   applyWikiMutationPlan,
@@ -34,6 +36,7 @@ import type { ContentModel, DesignUsagePlan, SitePlan } from "@personal-wiki-har
 import type { SourceDocument, WikiEntity, WikiLintIssue, WikiMutationPlan, WikiPage, WikiRelation, WikiSnapshot } from "@personal-wiki-harness/wiki-core";
 import type { KnowledgeBaseSummary } from "../create-agent-types";
 import {
+  completeStudioSiteHtml,
   createStudioSubAgentExecutor,
   getPublicStudioLlmRuntime,
   isStudioLlmUseCaseEnabled
@@ -829,7 +832,7 @@ const createStudioSiteAgentExecutor = (snapshotProvider: () => WikiSnapshot): Su
   const toolRegistry = createStudioSiteToolRegistry(snapshotProvider);
   const builderAgentExecutor = createStudioSubAgentExecutor("site-builder", {
     toolRegistry,
-    maxToolRounds: 6
+    maxToolRounds: 8
   });
   const plannerExecutor = createStudioSubAgentExecutor("site-planner", {
     toolRegistry,
@@ -864,16 +867,67 @@ const createStudioSiteAgentExecutor = (snapshotProvider: () => WikiSnapshot): Su
         executed.status === "failed" &&
         (trace.role === "builder-agent" || trace.role === "site-planner" || trace.role === "site-compiler")
       ) {
-        console.warn(
-          `[site-agents] ${trace.role} failed, falling back to deterministic site draft.`,
+        // Surface the real failure instead of masking it with a deterministic
+        // template. The orchestrator turns a failed builder/planner/compiler
+        // trace into a blocking verification error, so the run fails visibly
+        // with the underlying model or tool error rather than silently shipping
+        // a templated site the user did not ask for.
+        console.error(
+          `[site-agents] ${trace.role} failed; surfacing the error to the run instead of falling back to a template.`,
           executed.result?.summary ?? "unknown error"
         );
-        const recoveredTrace = createDeterministicSiteFallbackTrace({
-          trace: traceWithCarriedArtifacts,
-          failedSummary: executed.result?.summary ?? ""
-        });
-        carriedArtifacts.push(...(recoveredTrace.result?.artifacts ?? []));
-        return recoveredTrace;
+        return executed;
+      }
+      if (
+        executed.status === "completed" &&
+        executed.result &&
+        (trace.role === "builder-agent" || trace.role === "site-planner" || trace.role === "site-compiler")
+      ) {
+        const presentKinds = new Set<string>();
+        for (const artifact of executed.result.artifacts) {
+          // An empty/truncated html artifact does not count as present, so the
+          // intact html recorded earlier via compileSite/writeSiteArtifact can
+          // still be harvested and win (findLastArtifact takes the last one).
+          if (artifact.kind === "html" && !htmlArtifactHasUsableContent(artifact)) continue;
+          presentKinds.add(artifact.kind);
+        }
+        const harvested = harvestSiteArtifactsFromToolCalls(executed.result.toolCalls).filter(
+          (artifact) => !presentKinds.has(artifact.kind)
+        );
+        if (harvested.length) {
+          console.warn(
+            `[site-agents] ${trace.role} did not return ${harvested
+              .map((artifact) => artifact.kind)
+              .join("/")} in JSON; harvested from tool calls.`
+          );
+          executed.result.artifacts = [...executed.result.artifacts, ...harvested];
+          executed.result.artifactRefs = uniqueList([
+            ...executed.result.artifactRefs,
+            ...harvested.map((artifact) => `${artifact.kind}:${artifact.id}`)
+          ]);
+        }
+
+        // Dedicated pass: have the model author the full HTML from the plan, so
+        // the published page is a bespoke design instead of the compileSite
+        // template. Appended last so findLastArtifact prefers it.
+        if (isTruthyEnv(process.env.PWH_SITE_HTML_RENDER) && trace.role !== "site-planner") {
+          const richHtml = await renderModelAuthoredHtml(executed.result.artifacts);
+          if (richHtml) {
+            const htmlArtifact: SubAgentArtifact = {
+              id: `model_html_${Date.now()}`,
+              kind: "html",
+              title: "Model-authored HTML",
+              summary: "Full HTML document authored by the model in a dedicated rendering pass.",
+              data: { html: richHtml }
+            };
+            executed.result.artifacts = [...executed.result.artifacts, htmlArtifact];
+            executed.result.artifactRefs = uniqueList([
+              ...executed.result.artifactRefs,
+              `html:${htmlArtifact.id}`
+            ]);
+            console.warn(`[site-agents] ${trace.role}: rendered model-authored HTML (${richHtml.length} chars).`);
+          }
+        }
       }
       carriedArtifacts.push(...(executed.result?.artifacts ?? []));
       return executed;
@@ -1556,6 +1610,159 @@ const findContextInput = (inputs: ContextPacketInput[], keywords: string[]) =>
   inputs.find((entry) => keywords.some((keyword) => entry.title.toLowerCase().includes(keyword.toLowerCase())));
 
 const idsForInputs = (inputs: Array<ContextPacketInput | undefined>) => uniqueList(inputs.flatMap((input) => input?.id ? [input.id] : []));
+
+// Some models (notably glm) "build" the site by calling the createSitePlan /
+// compileSite / writeSiteArtifact tools and pass the content model, site plan,
+// and HTML as tool INPUTS, then only narrate in their final message instead of
+// returning those as structured artifacts. The verifier requires the artifacts,
+// so recover them from the tool calls when the model didn't return them in JSON.
+// Mirrors the orchestrator's readSiteArtifactFiles: an html artifact is usable
+// when its data is a non-empty string, has a non-empty html field, or has files
+// with content. A truncated/empty html artifact should not block harvesting.
+const htmlArtifactHasUsableContent = (artifact: SubAgentArtifact): boolean => {
+  const data = artifact.data;
+  if (typeof data === "string") return data.trim().length > 0;
+  if (!isPlainRecord(data)) return false;
+  if (typeof data.html === "string" && data.html.trim().length > 0) return true;
+  const files = Array.isArray(data.files) ? data.files : [];
+  return files.some(
+    (file) => isPlainRecord(file) && typeof file.content === "string" && file.content.trim().length > 0
+  );
+};
+
+const harvestSiteArtifactsFromToolCalls = (toolCalls: ToolExecutionRecord[]): SubAgentArtifact[] => {
+  let contentModel: Record<string, unknown> | undefined;
+  let sitePlan: Record<string, unknown> | undefined;
+  let html: string | undefined;
+  const selectedAssetIds: string[] = [];
+
+  for (const call of toolCalls) {
+    const input = isPlainRecord(call.input) ? call.input : {};
+    const output = isPlainRecord(call.output) ? call.output : {};
+    if (call.toolName === "createSitePlan" || call.toolName === "compileSite") {
+      if (!contentModel && isPlainRecord(input.contentModel)) contentModel = input.contentModel;
+      if (!sitePlan && isPlainRecord(input.sitePlan)) sitePlan = input.sitePlan;
+    }
+    if (call.toolName === "writeSiteArtifact" && typeof input.html === "string" && input.html.trim()) {
+      html = input.html;
+    }
+    if (call.toolName === "compileSite") {
+      if (typeof input.html === "string" && input.html.trim()) html = html ?? input.html;
+      else if (typeof output.html === "string" && output.html.trim()) html = html ?? output.html;
+    }
+    if (call.toolName === "readDesignAsset" && typeof input.assetId === "string") {
+      selectedAssetIds.push(input.assetId);
+    }
+  }
+
+  const harvested: SubAgentArtifact[] = [];
+  const stamp = Date.now();
+  if (contentModel) {
+    harvested.push({
+      id: `harvested_content_${stamp}`,
+      kind: "content-model",
+      title: "Harvested Content Model",
+      summary: "Recovered from the createSitePlan/compileSite tool input.",
+      data: contentModel
+    });
+  }
+  if (sitePlan) {
+    harvested.push({
+      id: `harvested_siteplan_${stamp}`,
+      kind: "site-plan",
+      title: "Harvested Site Plan",
+      summary: "Recovered from the createSitePlan/compileSite tool input.",
+      data: sitePlan
+    });
+  }
+  if (html && html.trim()) {
+    harvested.push({
+      id: `harvested_html_${stamp}`,
+      kind: "html",
+      title: "Harvested HTML",
+      summary: "Recovered from the compileSite/writeSiteArtifact tool call.",
+      data: { html }
+    });
+  }
+  if (selectedAssetIds.length) {
+    harvested.push({
+      id: `harvested_design_${stamp}`,
+      kind: "design-usage-plan",
+      title: "Harvested Design Usage Plan",
+      summary: "Recovered from readDesignAsset tool calls.",
+      data: {
+        goal: "Recovered selected design assets from builder tool calls.",
+        selectedAssets: uniqueList(selectedAssetIds).map((assetId) => ({
+          assetId,
+          role: "support",
+          targetSectionIds: [],
+          reason: "Selected via readDesignAsset during the build.",
+          constraints: []
+        })),
+        rejectedAssets: [],
+        notes: []
+      }
+    });
+  }
+  return harvested;
+};
+
+const isTruthyEnv = (value: string | undefined) => {
+  const normalized = value?.trim().toLowerCase();
+  return normalized === "1" || normalized === "true" || normalized === "yes" || normalized === "on";
+};
+
+const SITE_HTML_SYSTEM_PROMPT = [
+  "你是资深前端设计师兼开发，为个人/品牌网站产出可直接发布的高质量页面。",
+  "根据给定的内容模型(contentModel)、站点规划(sitePlan)和设计资产计划(designUsagePlan)，产出一个完整的中文单页 HTML 文档。",
+  "硬性要求：",
+  "- 只输出 HTML 文档本身，从 <!doctype html> 开始、到 </html> 结束；不要任何解释、不要 markdown 代码块。",
+  "- 全部样式内联在 <style> 里，响应式（移动端可用），语义化标签，良好的排版层级、留白和视觉节奏。",
+  "- 内容只能来自给定的 contentModel/sitePlan，不要编造其中没有的事实；可以润色措辞但不要虚构经历或项目。",
+  "- 根据 designUsagePlan 的风格意图设计视觉（配色、字体气质、版式），做出有设计感、不像通用模板的页面。",
+  "- 绝不出现任何系统内部用语（如 harness、agent、model routing、content model、site plan、知识库 id 等）。",
+  "- 导航锚点与各 section 的 id 对应 sitePlan/ contentModel 的 section 顺序。"
+].join("\n");
+
+const extractHtmlDocument = (text: string): string => {
+  const fenced = text.match(/```(?:html)?\s*([\s\S]*?)```/i)?.[1];
+  const body = (fenced ?? text).trim();
+  const doc = body.match(/<!doctype html[\s\S]*<\/html>/i) || body.match(/<html[\s\S]*<\/html>/i);
+  if (doc) return doc[0];
+  // Possibly truncated mid-document: accept if it is clearly substantial HTML.
+  if (body.startsWith("<") && /<(body|main|section|header)/i.test(body)) return body;
+  return "";
+};
+
+// Dedicated HTML rendering pass: builders reliably produce the structured plan
+// (content-model/site-plan/design), but a full bespoke HTML document rarely fits
+// alongside that JSON in one model turn. So render the HTML in its own focused
+// call where it gets the whole output budget. Returns undefined on any failure
+// so the caller keeps the existing (template/harvested) html.
+const renderModelAuthoredHtml = async (artifacts: SubAgentArtifact[]): Promise<string | undefined> => {
+  const contentModel = artifacts.find((artifact) => artifact.kind === "content-model")?.data;
+  if (!isPlainRecord(contentModel)) return undefined;
+  const sitePlan = artifacts.find((artifact) => artifact.kind === "site-plan")?.data;
+  const designUsagePlan = artifacts.find((artifact) => artifact.kind === "design-usage-plan")?.data;
+
+  const messages: AgentMessage[] = [
+    { role: "system", content: SITE_HTML_SYSTEM_PROMPT },
+    { role: "user", content: JSON.stringify({ contentModel, sitePlan, designUsagePlan }) }
+  ];
+
+  try {
+    const response = await completeStudioSiteHtml({ tools: [], messages });
+    if (!response) return undefined;
+    const html = extractHtmlDocument(response.message.content);
+    return html.length > 800 ? html : undefined;
+  } catch (error) {
+    console.warn(
+      "[site-agents] model HTML render failed; keeping existing html artifact.",
+      error instanceof Error ? error.message : String(error)
+    );
+    return undefined;
+  }
+};
 
 const readPriorSiteArtifacts = (trace: SubAgentTrace): SubAgentArtifact[] => {
   const input = trace.packet.inputs.find((entry) => entry.id.startsWith("prior-site-artifacts:"));
@@ -3953,4 +4160,112 @@ export const getWikiSnapshotForBase = (userId: string, baseId?: string | null): 
     events: [],
     lintIssues: []
   };
+};
+
+// Read-only knowledge-base tools for the create conversation agent. This lets
+// the chat actually retrieve the selected wiki (index, pages, entities, search)
+// while it clarifies intent, instead of guessing from a truncated index string.
+// Deliberately excludes any write/build/design tools — the conversation only
+// reads, it never compiles a site.
+export const createKnowledgeChatToolRegistry = (userId: string, baseId?: string | null) => {
+  const snapshotProvider = () => getWikiSnapshotForBase(userId, baseId);
+  const tools: ToolDefinition[] = [
+    {
+      name: "readWikiIndex",
+      description: "Read the selected knowledge base index page plus a summary of its pages, entities, and sources.",
+      inputSchema: { type: "object", properties: {}, additionalProperties: false },
+      execute: async () => {
+        const snapshot = snapshotProvider();
+        const indexPage = snapshot.pages.find((page) => page.kind === "index" || page.path.endsWith("index.wiki"));
+        return {
+          found: Boolean(indexPage),
+          page: indexPage ? compactWikiPage(indexPage, snapshot) : null,
+          wikiSummary: summarizeWikiSnapshot(snapshot)
+        };
+      }
+    },
+    {
+      name: "searchWiki",
+      description: "Search pages, entities, and source titles inside the selected knowledge base.",
+      inputSchema: {
+        type: "object",
+        properties: { query: { type: "string" } },
+        required: ["query"],
+        additionalProperties: false
+      },
+      execute: async (input) => {
+        const snapshot = snapshotProvider();
+        const query = getToolString(input, "query").toLowerCase();
+        const matches = (value: string) => !query || value.toLowerCase().includes(query);
+        return {
+          query,
+          pages: snapshot.pages
+            .filter((page) => matches(`${page.title}\n${page.body}`))
+            .slice(0, 8)
+            .map((page) => compactWikiPage(page, snapshot)),
+          entities: snapshot.entities
+            .filter((entity) => matches(`${entity.name}\n${entity.aliases.join(" ")}\n${entity.summary}`))
+            .slice(0, 12)
+            .map(compactWikiEntity),
+          sources: snapshot.sources
+            .filter((source) => matches(`${source.title}\n${source.uri}\n${source.content}`))
+            .slice(0, 8)
+            .map(compactSourceDocument)
+        };
+      }
+    },
+    {
+      name: "readWikiPage",
+      description: "Read one wiki page by pageId, title, or path from the selected knowledge base.",
+      inputSchema: {
+        type: "object",
+        properties: { pageId: { type: "string" }, title: { type: "string" }, path: { type: "string" } },
+        additionalProperties: false
+      },
+      execute: async (input) => {
+        const snapshot = snapshotProvider();
+        const pageId = getToolString(input, "pageId");
+        const title = getToolString(input, "title");
+        const wikiPath = getToolString(input, "path");
+        const page = snapshot.pages.find(
+          (candidate) =>
+            (pageId && candidate.id === pageId) ||
+            (title && candidate.title.toLowerCase() === title.toLowerCase()) ||
+            (wikiPath && candidate.path === wikiPath)
+        );
+        return { found: Boolean(page), page: page ? compactWikiPage(page, snapshot, 4_000) : null };
+      }
+    },
+    {
+      name: "readEntity",
+      description: "Read one entity by entityId or name from the selected knowledge base.",
+      inputSchema: {
+        type: "object",
+        properties: { entityId: { type: "string" }, name: { type: "string" } },
+        additionalProperties: false
+      },
+      execute: async (input) => {
+        const snapshot = snapshotProvider();
+        const entityId = getToolString(input, "entityId");
+        const name = getToolString(input, "name");
+        const entity = snapshot.entities.find(
+          (candidate) =>
+            (entityId && candidate.id === entityId) ||
+            (name && candidate.name.toLowerCase() === name.toLowerCase()) ||
+            (name && candidate.aliases.some((alias) => alias.toLowerCase() === name.toLowerCase()))
+        );
+        return {
+          found: Boolean(entity),
+          entity: entity ? compactWikiEntity(entity) : null,
+          pages: entity
+            ? snapshot.pages
+                .filter((page) => page.entityIds.includes(entity.id) || page.id === entity.pageId)
+                .slice(0, 4)
+                .map((page) => compactWikiPage(page, snapshot))
+            : []
+        };
+      }
+    }
+  ];
+  return createToolRegistry(tools);
 };
